@@ -1,0 +1,167 @@
+/* ---------------------------
+   Global Variables & Fonts
+------------------------------ */
+
+:root {
+    --primary-color: #0077b6;                    /* Main brand blue for buttons and highlights */
+    --primary-hover: #023e8a;                    /* Darker blue for hover states */
+    --accent-color: #48cae4;                     /* Accent color for borders or icons */
+    --background-gradient: linear-gradient(to right, #1a6fc3, #cfd8e3); /* Background gradient for page */
+    --form-bg-color: #ffffff;                    /* Background color for form container */
+    --font-main: 'Inter', sans-serif;            /* Primary font */
+    --text-color: #222;                          /* Main text color */
+    --box-shadow-light: 0 0 20px rgba(0, 0, 0, 0.05); /* Subtle shadow for cards/containers */
+  }
+
+/* Import Inter font from Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+
+/* === Base Page Styling === */
+body {
+  background: var(--background-gradient);
+  font-family: var(--font-main);
+  color: var(--text-color);
+  margin: 0;
+  padding: 0;
+}
+
+/* === Form Container === */
+.container {
+  max-width: 700px;
+  background-color: var(--form-bg-color);
+  padding: 2rem;
+  border-radius: 1rem;
+  box-shadow: var(--box-shadow-light);
+  margin-top: 4rem;
+  position: relative;
+  z-index: 3;
+}
+
+/* TODO: Add reusable layout utilities like .card, .grid-2, .padded-block */
+/* === Headings === */
+h2 {
+  color: var(--primary-color);
+  font-weight: 600;
+  text-align: center;
+}
+
+/* === Hero Banner === */
+.hero-image {
+  background-image: url('https://unsplash.com/photos/C9dhUVP-o6w/download?ixid=M3wxMjA3fDB8MXxzZWFyY2h8MTF8fGFpcnBsYW5lfGVufDB8fHx8MTc0NDAzMjI1NHww&force=true');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  min-height: 320px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background-blend-mode: overlay;
+  color: white;
+}
+
+/* === Light Mode Adjustments === */
+@media (prefers-color-scheme: light) {
+  .hero-image {
+    background-image: url('https://unsplash.com/photos/C9dhUVP-o6w/download?ixid=M3wxMjA3fDB8MXxzZWFyY2h8MTF8fGFpcnBsYW5lfGVufDB8fHx8MTc0NDAzMjI1NHww&force=true');
+    color: #111;
+    filter: brightness(95%);
+  }
+}
+
+/* Adjust positioning of content inside hero image */
+.hero-image .position-relative {
+  z-index: 2;
+  position: relative;
+}
+
+/* Override default text colors in hero banner */
+.hero-image h1,
+.hero-image p {
+  color: #1a1a1a;
+  font-weight: 700;
+}
+
+/* === Form Label Styling === */
+.form-label {
+  font-weight: 500;
+}
+
+/* === Form Field Styling === */
+.form-control {
+  border-radius: 0.5rem;
+}
+
+.form-control:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 0.2rem rgba(0, 119, 182, 0.2);
+}
+
+input.form-control {
+  background-color: #f0f4f8; /* light gray-blue */
+  border: 1px solid #ced4da;
+}
+
+/* === Buttons === */
+.btn-primary {
+  background-color: var(--primary-color);
+  border: none;
+  padding: 0.75rem 2rem;
+  font-size: 1rem;
+  border-radius: 0.5rem;
+  transition: background-color 0.3s ease;
+}
+
+.btn-primary:hover {
+  background-color: var(--primary-hover);
+}
+
+/* TODO: Add animation or transition styles for result cards and feedback */
+
+/* === Search Result Styling === */
+.search-result-box {
+  background-color: #f0f4f8;
+  border-left: 5px solid var(--primary-color);
+  padding: 1.5rem;
+  border-radius: 0.75rem;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  color: #2d3748;
+}
+
+/* === Accessibility Enhancements === */
+
+/* Improve visibility of focused elements during keyboard navigation */
+:focus-visible {
+  outline: 2px solid var(--primary-color);
+  outline-offset: 2px;
+}
+
+/* === Responsive Layout For Tablets === */
+
+/* Adjust spacing and font size at tablet widths */
+@media (min-width: 768px) and (max-width: 1024px) {
+  .form-control {
+    font-size: 1rem;
+    padding: 0.5rem;
+  }
+
+  .btn-primary {
+    font-size: 1rem;
+    padding: 0.75rem 2rem;
+  }
+}
+
+/* === Optional Styling for Semantic Tags === */
+
+/* Add spacing around semantic blocks if needed */
+main, section {
+  display: block;
+  margin-bottom: 2rem;
+}
+
+/* Ensure hero header behaves visually consistent */
+header.hero-image {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
