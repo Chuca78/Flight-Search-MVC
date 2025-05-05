@@ -1,157 +1,113 @@
 # Flight Search MVC Application
 
-This project is a Spring Boot web application that allows users to search for flights by entering origin, destination, date of travel, and number of passengers.  
-**Milestone Two** demonstrates a fully functional REST API with Spring Data JPA and dynamic frontend rendering via Thymeleaf, progressing from a static UI prototype to a robust Java-based MVC architecture.
+This project is a Spring Boot web application that enables users to search for flights by entering origin, destination, date of travel, and number of passengers. The application integrates a RESTful backend and dynamic Thymeleaf-based frontend, representing a transition from a static prototype to a full-stack MVC architecture.  
 
 ## Features Implemented
 
-- Full-stack Java MVC using Spring Boot + Thymeleaf
-- RESTful `/api/search` endpoint returns JSON flight results
-- Flight search form with:
-  - Origin and Destination fields
-  - Date picker using HTML5 date input
-  - Passenger count (1 - 10)
-- Results dynamically retrieved via `RestTemplate` API call
-- Display of multiple results with:
-  - Airline name
-  - Departure/arrival times
-  - Price in USD
-- Flight data persisted using Spring Data JPA with H2
-- Accessible HTML with `aria-label` enhancements
-- Responsive UI styled using Bootstrap 5
+- Spring Boot MVC architecture with Thymeleaf
+- RESTful API endpoint at `/api/search`
+- Amadeus API integration using `RestTemplate`
+- Validated form input with `@NotNull` and `@Min` annotations
+- Accessible HTML5 form with Bootstrap styling
+- Clear error messages for invalid inputs
+- Dynamic display of search results (airline, time, price)
+- Server-side validation and error handling
+- JUnit tests for controllers, services, and models
+- All business logic is modularized and tested
+
 
 ## Technology Stack
 
-- Java 17
-- Spring Boot
+- Java 21
+- Spring Boot 3
 - Maven
-- SpringMVC + Thymeleaf
-- Spring Data JPA + H2 in-memory DB
+- Thymeleaf
+- HTML5 / CSS3
 - Bootstrap 5
-- Maven
 - JUnit 5 + Mockito
 - Manual test via Postman/curl
+- Amadeus REST API (test endpoint)
 
 ## Project Structure
 
 ### Model
-├── Flight.java                # Flight entity for database
-├── FlightSearchRequest.java  # Form binding and input validation
+- `FlightSearchRequest.java` – Form input model with validation
+- `FlightResult.java` – Structure for returned flight data
 
 ### View
-└── index.html                # Search form + dynamic results (Thymeleaf)
+- `index.html` – Main search page with results and error handling
 
 ### Controller
-├── FlightController.java     # Web UI controller (Thymeleaf)
-├── FlightApiController.java  # REST API controller
+- `FlightController.java` – Handles form input and result display
+- `RestFlightController.java` – Accepts `/api/search` POST and returns JSON
 
 ### Service
-└── FlightSearchService.java  # Search logic using FlightRepository
+- `FlightSearchService.java` – Orchestrates search logic and handles Amadeus API
+- `AmadeusFlightService.java` – Optional alternate service (archived)
 
-### Repository
-└── FlightRepository.java     # JPA interface for flight queries
+### Config
+- `AmadeusProperties.java` – Injects API keys and URL config from `application.properties`
 
 ### Static Resources
-├── application.properties    # H2 config and init behavior
-├── data.sql                  # Seeded flight data
-├── /static/css/style.css     # Custom UI styling
+- `style.css` - Custom styles (dark slate, input backgrounds)  
+- `app.js` (placeholder) -Reserved for future JS 
 
-## Milestone Two Focus Areas
+## Testing
 
-- Migrated from static HTML/CSS/JS to a full Java Spring Boot MVC architecture using Thymeleaf
-- Implemented a **REST API endpoint** for searching flights (`/api/search`) using FlightApiController with request validation and JSON response support
-- Integrated Spring Data JPA with an H2 in-memory database for flight persistence using Flight entity and FlightRepository
-- Seeded the database with sample flight data via data.sql, including realistic times and prices
-- Updated the FlightSearchService to query real database records instead of dummy data
-- UI (FlightController) now uses RestTemplate to communicate with the API and dynamically render search results
-- Enhanced accessibility with aria-label attributes and semantic HTML in index.html
-- Developed a complete JUnit test suite, including:
-  - Controller, service, repository, and model validation tests
-  - Integration tests using H2 and Spring Boot context
-- Refined Javadoc and inline comments across all classes for consistency and clarity
-- Clearly separated concerns between model, view, controller, and service layers
-- Documented all enhancements in TODO.md and maintained project alignment with milestone rubric
-- Positioned for Milestone Three features: login system, booking flow, and advanced validations
+The following test classes are included and pass:
 
-## How to Run
+- `FlightSearchServiceTest.java`
+- `FlightSearchRequestTest.java`
+- `FlightControllerTest.java`
+- `RestFlightControllerTest.java`
+- `FlightSearchMvcApplicationTests.java`
 
-1. Import project into your IDE
-2. Ensure Java 17+ and Maven are installed
-3. Delete /target (if present)
-4. Build & run in terminal:
-    ```bash
-    ./mvnw clean install
-    ./mvnw spring-boot:run
-    ```
-5. Open browser: [http://localhost:8080/](http://localhost:8080/)
-      H2 console: `http://localhost:8080/h2-console`  
-      (JDBC URL: `jdbc:h2:mem:flightsdb`)
+Run all tests:
 
-## Using the REST API Directly
-
-- **Endpoint:**  
-  `POST http://localhost:8080/api/search`
-- **Request Body (JSON):**
-    ```json
-    {
-      "from": "JFK",
-      "to": "LAX",
-      "date": "2025-05-01",
-      "passengers": 1
-    }
-    ```
-- **Response Example:**
-    ```json
-    [
-      {
-        "airline": "British Airways",
-      "origin": "New York",
-      "destination": "London",
-      "departureTime": "07:00",
-      "arrivalTime": "19:30",
-      "price": 500.0
-      }
-    ]
-    ```
-- **Test using Postman or curl:**
-    ```bash
-    curl  -X POST http://localhost:8080/api/search       
-          -H "Content-Type: application/json"       
-          -d '{"origin":"JFK","destination":"LAX","date":"2025-05-01","passengers":1}'
-    ```
-## Manual Testing Evidence
-
-- All features work as described via browser (http://localhost:8080/) and direct API calls (Postman/curl)
-- No critical errors in code or runtime
-
-## Automated Testing
-
-This project includes a comprehensive suite of JUnit-based tests to ensure correctness, reliability, and support for future development.
-
-- **Controller tests:**  
-  Confirm that /api/search returns the expected JSON output, handles validation errors properly, and integrates with the service layer without issues.
-
-- **Service tests:**  
-  Validate that FlightSearchService accurately processes user search requests, queries the repository correctly, and returns valid flight results (or empty lists for unmatched input).
-
-- **Repository tests:**
-  Verify that FlightRepository methods return correct matches based on origin, destination, and date using an in-memory H2 database.
-
-- **Model validation tests:**  
-  Ensure that constraints on FlightSearchRequest (e.g., required fields, positive passenger counts) are enforced and raise violations when missing or invalid.
-
-**To run tests:**  
 ```bash
 ./mvnw clean test
 ```
 
-## Known Limitations / TODOs
+## How to Run
 
-- No login/authentication yet
-- Booking system is not implemented
-- Dropdowns and client-side form validation not active
-- Navbar and booking confirmation UI are placeholders
-- Static airport options will be added in future version
+1. Clone the repository
+2. Ensure you have Java 17+ and Maven installed
+3. Build and run:
+
+```bash
+./mvnw clean install
+./mvnw spring-boot:run
+```
+
+4. Visit:  
+   [http://localhost:8080/](http://localhost:8080/)
+
+## Using the API
+
+- **Endpoint:** `POST /api/search`
+- **Content-Type:** `application/x-www-form-urlencoded` (default from HTML form)
+- **Example request using Postman or curl:**
+
+```bash
+curl -X POST http://localhost:8080/api/search \
+     -d "origin=CID&destination=CLT&date=2025-05-05&passengers=1"
+```
+
+## Milestone Two Focus Summary
+
+- Integrated real-time flight search with mock Amadeus API
+- Implemented JSON response handling and parsing with Jackson
+- Provided UI and REST endpoint with consistent behavior
+- Ensured accessibility compliance and contrast visibility
+- Included full unit test coverage with mock APIs
+- Eliminated all code warnings and unused imports
+
+## Known Limitations / Future Enhancements
+
+- Carrier codes returned from Amadeus (e.g., “UA”) not yet mapped to full names
+- No real authentication or login mechanism yet
+- Booking system and persistence layer not implemented
+- UI could benefit from additional feedback for slow API responses
 
 ---
 
@@ -161,3 +117,4 @@ This project includes a comprehensive suite of JUnit-based tests to ensure corre
 Timothy Fleck  
 [tfleck78@gmail.com](mailto:tfleck78@gmail.com)  
 [https://github.com/Chuca78/Flight-Search-MVC](https://github.com/Chuca78/Flight-Search-MVC)
+

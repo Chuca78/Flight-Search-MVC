@@ -1,28 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" 
+<!-- Maven Project Object Model (POM) configuration file -->
+<project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 
-    <!-- Maven Project Coordinates and Inheritance -->
+    <!-- Maven model version -->
     <modelVersion>4.0.0</modelVersion>
+
+    <!-- Inherits common Spring Boot dependency and plugin management -->
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>3.4.5</version>
-        <relativePath/> <!-- Use Spring Boot parent for dependency management -->
+        <relativePath/> <!-- Resolves the parent from the repository -->
     </parent>
 
-    <!-- Project Metadata -->
+    <!-- Project coordinates -->
     <groupId>com.example</groupId>
     <artifactId>flightsearchmvc</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>flightsearchmvc</name>
     <description>Demo project for Spring Boot</description>
 
-    <!-- Placeholder sections (not populated) -->
+    <!-- Optional metadata (currently unused) -->
     <url/>
-    <licenses><license/></licenses>
-    <developers><developer/></developers>
+    <licenses>
+        <license/>
+    </licenses>
+    <developers>
+        <developer/>
+    </developers>
     <scm>
         <connection/>
         <developerConnection/>
@@ -30,70 +37,55 @@
         <url/>
     </scm>
 
-    <!-- Java version configuration -->
+    <!-- Java version to compile the project -->
     <properties>
         <java.version>17</java.version>
     </properties>
 
-    <!-- Project Dependencies -->
+    <!-- Project dependencies -->
     <dependencies>
-
-        <!-- Spring Boot Actuator (for metrics and health endpoints) -->
+        <!-- Provides health endpoints and metrics for Spring Boot -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
 
-        <!-- Thymeleaf Template Engine -->
+        <!-- Enables Thymeleaf as the template engine for rendering views -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-thymeleaf</artifactId>
         </dependency>
 
-        <!-- Spring Web MVC -->
+        <!-- Core Spring MVC and embedded Tomcat server support -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
-        <!-- Spring Boot Testing Support (JUnit, Mockito, etc.) -->
+        <!-- Unit testing support (JUnit, Mockito, etc.) -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
 
-        <!-- Bean Validation (JSR 380) -->
+        <!-- Enables bean validation annotations like @NotNull, @Min, etc. -->
         <dependency>
             <groupId>org.hibernate.validator</groupId>
             <artifactId>hibernate-validator</artifactId>
         </dependency>
 
-        <!-- Spring Data JPA for ORM and Repository Support -->
+        <!-- For parsing and generating JSON (used with Amadeus API) -->
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-jpa</artifactId>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
         </dependency>
-
-        <!-- H2 In-Memory Database for Development and Testing -->
-        <dependency>
-            <groupId>com.h2database</groupId>
-            <artifactId>h2</artifactId>
-            <scope>runtime</scope>
-        </dependency>
-
-        <!-- Mockito Core for Unit Testing with Mocking -->
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-core</artifactId>
-            <scope>test</scope>
-        </dependency>
-
     </dependencies>
 
-    <!-- Build Plugins -->
+    <!-- Build plugins -->
     <build>
         <plugins>
+            <!-- Allows packaging and running the app using Spring Boot commands -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>

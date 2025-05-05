@@ -18,41 +18,46 @@ Completed:
 ---
 
 ## Milestone Two: RESTful Service and Backend Integration
-- [x] Implemented REST API at `/api/search`
-- [x] Integrated H2 database with `FlightRepository`
-- [x] Updated `FlightSearchService` to query database
-- [x] Seeded database with `data.sql`
-- [x] Connected backend to UI via `RestTemplate`
-- [x] Rendered flight results dynamically in Thymeleaf
-- [x] Added validation to `FlightSearchRequest`
-- [x] Added unit and integration tests:
-  - FlightSearchServiceTest
-  - FlightSearchServiceIntegrationTest
-  - FlightControllerTest
-  - FlightSearchRequestTest
-  - FlightRepositoryTest
+Completed:
+- [x] Created RESTful controller at `/api/search` returning JSON
+- [x] Integrated Amadeus API with token-based authentication
+- [x] Replaced dummy logic with live data from Amadeus for realistic output
+- [x] Built `searchWithAmadeus()` and `getAccessToken()` methods in `FlightSearchService`
+- [x] Supported fallback dummy results if needed via `searchFlights()`
+- [x] Validated `FlightSearchRequest` using `@NotNull` and `@Min` annotations
+- [x] Added unit tests:
+  - `FlightSearchServiceTest`
+  - `FlightSearchRequestTest`
+  - `FlightControllerTest`
+  - `RestFlightControllerTest`
+  - `FlightSearchMvcApplicationTests` (context load test)
+- [x] Commented all classes and methods for clarity and rubric compliance
+- [x] Removed debug logging and cleaned up unused code
 - [x] Added aria-labels for accessibility
-- [x] Enhanced Javadoc and inline comments across backend
+
+---
 
 ## Milestone Three: Security, Validation, and Final Enhancements
-- [ ] Add user login and authentication (Spring Security)
-- [ ] Create user registration flow (HTML + controller)
-- [ ] Associate flight booking with authenticated user
-- [ ] Implement booking confirmation view and backend logic
-- [ ] Create `Booking` model, repository, and service
-- [ ] Add navbar for login/logout, user dashboard
-- [ ] Add client-side validation (JavaScript or HTML5)
-- [ ] Refactor service logic for modularity if needed
-- [ ] Expand integration tests for booking flow
+- [ ] Perform full form validation using Jakarta Validation API
+- [ ] Handle invalid inputs with UI error messaging
+- [ ] Structure exception handling and error messages in REST and MVC controllers
+- [ ] Verify that the app runs cleanly with no runtime or test errors
+- [ ] Add date validation rule (e.g., no past dates — optional)
+- [ ] Consider front-end client validation for improved UX (HTML5 or JS)
+- [ ] Final polish for UI clarity and responsiveness (if needed)
 
 ---
 
 ## Final Submission: Clean-Up and Packaging
 To Do:
-- [ ] Add project-level `TODO.md` and milestone checklist (in work)
-- [ ] Update `README.md` with final deployment steps
-- [ ] Include accessibility audit summary (Lighthouse or manual)
-- [ ] Create final ZIP containing all source files and documentation
-- [ ] Perform final run-through with working search, dummy results, and clean UI
+- [ ] Finalize this `TODO.md` and mark all rubric goals
+- [ ] Update `README.md` with build/test/run instructions
+- [ ] Create `.zip` archive with:
+  - Java source files
+  - HTML/Thymeleaf templates
+  - `application.properties`
+  - `README.md` and `TODO.md`
+- [ ] Perform one last functional test for both `/` and `/api/search` with live and dummy modes
+- [ ] Ensure clean and professional presentation for submission
 
 ---

@@ -2,8 +2,11 @@ package com.example.flightsearchmvc;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.client.RestTemplate;
+
+import com.example.flightsearchmvc.config.AmadeusProperties;
 
 /**
  * Main application class for launching the Flight Search MVC project.
@@ -11,6 +14,7 @@ import org.springframework.web.client.RestTemplate;
  * This initializes the Spring Boot application context and starts the web server.
  */
 @SpringBootApplication
+@EnableConfigurationProperties(AmadeusProperties.class) 
 public class FlightSearchMvcApplication {
 
     /**
@@ -21,17 +25,9 @@ public class FlightSearchMvcApplication {
     public static void main(String[] args) {
         SpringApplication.run(FlightSearchMvcApplication.class, args);
     }
-
-    /**
-    * Configures a RestTemplate bean for making HTTP requests.
-    * Used by the FlightController to call the REST API internally.
-    *
-    * @return a new RestTemplate instance
-    */
     @Bean
     public RestTemplate restTemplate() {
         return new RestTemplate();
 
     }
 }
-

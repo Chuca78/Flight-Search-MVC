@@ -1,40 +1,74 @@
 package com.example.flightsearchmvc.controller;
 
+import com.example.flightsearchmvc.model.FlightSearchRequest;
+import com.example.flightsearchmvc.service.FlightSearchService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
+import org.mockito.Mockito;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
 
+import java.util.List;
+
+import static org.mockito.ArgumentMatchers.any;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
- * Integration-style test for FlightApiController's /api/search endpoint.
- *
- * <p>Uses MockMvc to simulate HTTP requests and verify correct JSON responses.
- * Assumes Spring Boot context is correctly wired with FlightSearchService.</p>
+ * Unit tests for the FlightController, which handles the HTML form-based flight search.
+ * This test uses Spring's MockMvc to simulate HTTP requests and verify controller behavior.
  */
-@SpringBootTest
-@AutoConfigureMockMvc
+@WebMvcTest(FlightController.class)
 class FlightControllerTest {
 
-    @Autowired
     private MockMvc mockMvc;
 
+    // Mocks the FlightSearchService dependency inside FlightController
+    @MockitoBean
+    private FlightSearchService flightSearchService;
+
     /**
-     * Verifies that the /api/search endpoint returns 200 OK for valid JSON input.
-     * Also checks that the response is in JSON format.
+     * Initializes the MockMvc object using the web application context.
+     */
+    @BeforeEach
+    void setUp(WebApplicationContext context) {
+        this.mockMvc = MockMvcBuilders.webAppContextSetup(context).build();
+    }
+
+    /**
+     * Test that verifies valid search input returns the "index" view with flight results in the model.
+     * The mocked service returns an empty result list.
      */
     @Test
-    void searchFlights_returnsOk() throws Exception {
-        String json = "{ \"origin\": \"New York\", \"destination\": \"London\", \"date\": \"2025-05-01\", \"passengers\": 1 }";
+    void processSearch_validInput_returnsIndexWithResults() throws Exception {
+        Mockito.when(flightSearchService.searchWithAmadeus(any(FlightSearchRequest.class)))
+                .thenReturn(List.of());
 
-        mockMvc.perform(post("/api/search")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(json))
+        mockMvc.perform(post("/search")
+                        .param("origin", "CID")
+                        .param("destination", "CLT")
+                        .param("date", "2025-05-05")
+                        .param("passengers", "1"))
                 .andExpect(status().isOk())
-                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON));
+                .andExpect(view().name("index"))
+                .andExpect(model().attributeExists("flightResults")); // Ensures results attribute is returned
+    }
+
+    /**
+     * Test that verifies invalid input (missing required fields) triggers an error and returns to the form.
+     */
+    @Test
+    void processSearch_invalidInput_returnsIndexWithError() throws Exception {
+        mockMvc.perform(post("/search")
+                        .param("origin", "")       // Origin is required
+                        .param("destination", "CLT")
+                        .param("date", "")          // Date is required
+                        .param("passengers", "1"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("index"))
+                .andExpect(model().attributeExists("error")); // Checks for presence of error message
     }
 }

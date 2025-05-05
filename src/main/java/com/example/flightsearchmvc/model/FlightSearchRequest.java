@@ -5,34 +5,28 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 
 /**
- * Model representing a user's flight search request.
- *
- * <p>This class is used for both the REST API input and Thymeleaf form binding.
- * It includes validation annotations to ensure proper input for origin, destination,
- * travel date, and passenger count.</p>
+ * Represents the user input for searching flights.
+ * This model is bound to the flight search form.
  */
 public class FlightSearchRequest {
 
-    /** City or airport of departure (must not be null) */
     @NotNull(message = "Origin is required")
-    private String origin;
+    private String origin;  // Departure airport or city
 
-    /** City or airport of arrival (must not be null) */
     @NotNull(message = "Destination is required")
-    private String destination;
+    private String destination;  // Arrival airport or city
 
-    /** Travel date (must not be null) */
     @NotNull(message = "Date is required")
-    private LocalDate date;
+    private LocalDate date;  // Travel date
 
-    /** Passenger count (minimum 1 required) */
     @Min(value = 1, message = "Passengers must be at least 1")
-    private int passengers;
+    private int passengers;  // Number of passengers
 
     /**
-     * Default constructor required for Spring binding and form usage.
+     * Default constructor used by frameworks.
      */
-    public FlightSearchRequest() {}
+    public FlightSearchRequest() {
+    }
 
     // Getters and setters
 

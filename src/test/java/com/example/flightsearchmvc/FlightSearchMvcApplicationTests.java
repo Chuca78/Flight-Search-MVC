@@ -4,21 +4,19 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 /**
- * Basic smoke test to verify that the Spring application context loads successfully.
- *
- * <p>This test ensures that all beans and configurations are valid and the application
- * can start without runtime exceptions. Required by Spring Boot test conventions.</p>
+ * Basic integration test to verify that the Spring Boot application context loads successfully.
+ * This ensures all configuration and bean initialization is valid.
  */
 @SpringBootTest
 class FlightSearchMvcApplicationTests {
 
     /**
-     * Loads the application context.
-     *
-     * <p>Will fail if any Spring beans are misconfigured or missing.</p>
+     * Verifies that the Spring application context can load without errors.
+     * This test is useful as a baseline health check of the overall configuration.
      */
     @Test
     void contextLoads() {
-        // Context loading is automatically validated by the test runner
+        System.out.println("contextLoads test executed successfully.");
+        assert true;  // Simple assertion to confirm test ran
     }
 }

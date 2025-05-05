@@ -1,86 +1,72 @@
 package com.example.flightsearchmvc.controller;
 
-import com.example.flightsearchmvc.model.Flight;
 import com.example.flightsearchmvc.model.FlightSearchRequest;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.example.flightsearchmvc.model.FlightResult;
+import com.example.flightsearchmvc.service.FlightSearchService;
+import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RestClientException;
-import org.springframework.web.client.RestTemplate;
 
-import java.util.Collections;
 import java.util.List;
 
 /**
- * MVC Controller for handling user-facing flight search interactions.
- *
- * <p>This controller serves the Thymeleaf-based UI. It handles:
- * <ul>
- *   <li>GET "/" — renders the search form</li>
- *   <li>POST "/search" — submits form data to the backend REST API and displays results</li>
- * </ul>
- * </p>
+ * Web controller that handles requests for flight search using a traditional HTML-based interface.
+ * Provides endpoints for rendering the search form and processing user submissions.
  */
 @Controller
 public class FlightController {
 
-    private final RestTemplate restTemplate;
-    private static final Logger logger = LoggerFactory.getLogger(FlightController.class);
+    private final FlightSearchService flightSearchService;
 
     /**
-     * Constructor-based injection for RestTemplate.
+     * Constructor for injecting the flight search service.
      *
-     * @param restTemplate the RestTemplate used to call the backend API
+     * @param flightSearchService Service for retrieving flight information
      */
-    public FlightController(RestTemplate restTemplate) {
-        this.restTemplate = restTemplate;
+    public FlightController(FlightSearchService flightSearchService) {
+        this.flightSearchService = flightSearchService;
     }
 
     /**
-     * Handles GET request to render the flight search form.
+     * Handles GET requests to the root path ("/") and displays the search form.
      *
-     * @param model Spring model to bind form data
-     * @return name of the Thymeleaf view (index.html)
+     * @param model Spring model to bind the form object
+     * @return View name for the index page
      */
     @GetMapping("/")
-    public String showForm(Model model) {
+    public String showSearchForm(Model model) {
         model.addAttribute("flightSearchRequest", new FlightSearchRequest());
         return "index";
     }
 
     /**
-     * Handles POST request for flight search. Sends request to backend API and displays the results.
+     * Handles POST requests to perform a flight search.
      *
-     * <p>If the API call fails, an error message is displayed. If no results match,
-     * an empty result list is rendered.</p>
-     *
-     * @param flightSearchRequest form data from user input
-     * @param model Spring model to bind results to view
-     * @return name of the Thymeleaf view (index.html)
+     * @param request        The flight search form data
+     * @param bindingResult  Holds validation errors, if any
+     * @param model          Spring model to pass attributes to the view
+     * @return View name to render results or return to form on error
      */
     @PostMapping("/search")
-    public String searchFlights(@ModelAttribute FlightSearchRequest flightSearchRequest,
-                                Model model) {
-
-        String url = "http://localhost:8080/api/search";
-        List<Flight> results = Collections.emptyList();
-
-        try {
-            logger.info("Searching flights: {}", flightSearchRequest);
-            Flight[] response = restTemplate.postForObject(url, flightSearchRequest, Flight[].class);
-            if (response != null) {
-                results = List.of(response); // convert array to list
-            }
-        } catch (RestClientException e) {
-            logger.error("Error calling flight API: {}", e.getMessage());
-            model.addAttribute("errorMessage", "Could not fetch flight data. Please try again later.");
+    public String processSearch(
+            @ModelAttribute("flightSearchRequest") @Valid FlightSearchRequest request,
+            BindingResult bindingResult,
+            Model model
+    ) {
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("error", "Invalid search input. Please check all fields.");
+            return "index";
         }
 
-        // Bind input and results back to the view
-        model.addAttribute("flightSearchRequest", flightSearchRequest);
-        model.addAttribute("flightResults", results);
+        try {
+            List<FlightResult> results = flightSearchService.searchWithAmadeus(request);
+            model.addAttribute("flightResults", results);
+        } catch (Exception e) {
+            model.addAttribute("error", "Unable to fetch flight data: " + e.getMessage());
+        }
+
         return "index";
     }
 }

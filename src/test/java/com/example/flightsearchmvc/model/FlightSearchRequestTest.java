@@ -10,17 +10,18 @@ import java.util.Set;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Unit tests for validating constraints on the FlightSearchRequest model.
- *
- * <p>Tests ensure that Bean Validation annotations on the request object
- * enforce proper input requirements for the flight search form/API.</p>
+ * Unit tests for validating the FlightSearchRequest model.
+ * These tests ensure that the input constraints defined via annotations
+ * are properly enforced.
  */
 class FlightSearchRequestTest {
 
+    // Shared validator instance used for all tests
     private static Validator validator;
 
     /**
-     * Initializes the validator factory for use in all tests.
+     * Initializes the validator factory before all tests.
+     * This setup runs only once.
      */
     @BeforeAll
     static void setupValidator() {
@@ -29,7 +30,7 @@ class FlightSearchRequestTest {
     }
 
     /**
-     * Verifies that a well-formed FlightSearchRequest passes validation.
+     * Test that a properly populated FlightSearchRequest passes validation.
      */
     @Test
     void validRequest_shouldPassValidation() {
@@ -44,18 +45,19 @@ class FlightSearchRequestTest {
     }
 
     /**
-     * Verifies that leaving all fields unset triggers validation failures.
+     * Test that leaving all fields empty causes validation to fail.
      */
     @Test
     void missingRequiredFields_shouldFailValidation() {
         FlightSearchRequest request = new FlightSearchRequest();
+        // No fields set
 
         Set<ConstraintViolation<FlightSearchRequest>> violations = validator.validate(request);
         assertFalse(violations.isEmpty(), "Missing fields should cause violations");
     }
 
     /**
-     * Verifies that setting a negative passenger count fails validation.
+     * Test that setting passengers to a negative number triggers a validation error.
      */
     @Test
     void negativePassengers_shouldFailValidation() {

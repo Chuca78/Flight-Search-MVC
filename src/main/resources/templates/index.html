@@ -1,4 +1,7 @@
-<!-- UI with backend integration complete - pre-Milestone 3 -->
+<!-- Milestone Two Draft -->
+<!-- TODO: Milestone Three Integration: Implement user registration, XML-based login authentication, and flight booking persistence using a database -->
+
+<!-- index.html -->
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
@@ -7,93 +10,88 @@
   <meta name="color-scheme" content="light dark" />
   <title>Flight Search</title>
 
-  <!-- Bootstrap for styling -->
+  <!-- Bootstrap CSS for styling -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
-  <!-- Custom application styles -->
+  <!-- Custom stylesheet -->
   <link rel="stylesheet" th:href="@{/css/style.css}" />
 </head>
 
 <body>
-<!-- TODO (Milestone 3): Add navigation bar for authenticated users (login/logout, account, bookings) -->
-
-  <!-- Hero banner with heading and subtext -->
-  <header class="hero-image text-white text-center mb-4">
+  <!-- TODO: Milestone Three – Add navigation bar with user login/logout status and account links -->
+  <header class="hero-image text-white text-center mb-4" role="banner">
     <div class="position-relative p-5">
       <h1 class="display-5 fw-bold">Find Your Next Adventure</h1>
       <p class="lead">Book flights quickly and easily</p>
     </div>
   </header>
 
-  <!-- Main flight search section -->
-  <main>
+  <main role="main">
     <section class="container mt-5">
       <h2 class="text-center mb-4">Search for Flights</h2>
 
-      <!-- TODO (Milestone 3): Add client-side form validation for better UX -->
-
-      <!-- Search Form -->
-      <form th:action="@{/search}" method="post" th:object="${flightSearchRequest}">
+      <!-- Flight Search Form -->
+      <!-- Binds to a FlightSearchRequest model object in the controller -->
+      <form th:action="@{/search(source='amadeus')}" method="post" th:object="${flightSearchRequest}" aria-label="Flight Search Form">
         <div class="row mb-3">
           <div class="col-md-6">
             <label for="origin" class="form-label">Origin</label>
-            <!-- TODO (Milestone 3): Add datalist or dropdown for known airports -->
-            <input type="text" class="form-control" id="origin" name="origin" th:field="*{origin}" placeholder="City or Airport" required />
+            <!-- TODO: Milestone Three – Integrate airport code autocomplete -->
+            <input type="text" class="form-control" id="origin" th:field="*{origin}" placeholder="Airport Code (e.g., JFK)" required />
           </div>
           <div class="col-md-6">
             <label for="destination" class="form-label">Destination</label>
-            <input type="text" class="form-control" id="destination" name="destination" th:field="*{destination}" placeholder="City or Airport" required />
+            <input type="text" class="form-control" id="destination" th:field="*{destination}" placeholder="Airport Code (e.g., LAX)" required />
           </div>
         </div>
 
         <div class="row mb-3">
           <div class="col-md-6">
             <label for="date" class="form-label">Date of Travel</label>
-            <input type="date" class="form-control" id="date" name="date" th:field="*{date}" required />
+            <input type="date" class="form-control" id="date" th:field="*{date}" required />
           </div>
           <div class="col-md-6">
             <label for="passengers" class="form-label">Number of Passengers</label>
-            <input type="number" class="form-control" id="passengers" name="passengers" min="1" max="10" th:field="*{passengers}" required />
+            <input type="number" class="form-control" id="passengers" min="1" max="10" th:field="*{passengers}" required />
           </div>
         </div>
 
-        <!-- Submit button -->
+        <!-- Submit Button -->
         <div class="text-center">
-          <button type="submit" class="btn btn-primary">Search Flights</button>
+          <button type="submit" class="btn btn-primary" aria-label="Search Flights">Search Flights</button>
         </div>
       </form>
 
-      <!-- Optional error message display -->
+      <!-- Error Message Display -->
       <div th:if="${error}" class="error-result-box mt-4" role="alert">
         <p th:text="${error}"></p>
       </div>
 
+      <!-- Search Results -->
       <div th:if="${flightResults}">
         <h2>Search Results</h2>
-        <div th:each="flight : ${flightResults}" class="card my-2 p-2" role="region" aria-label="Flight search result">
-          <h5 th:text="${flight.airline}" aria-label="Airline">Airline</h5>
+        <div th:each="flight : ${flightResults}" class="card my-2 p-2" role="region" aria-label="Flight Result Card">
+          <h5 th:text="${flight.airline}">Airline</h5>
           <p>
-            <strong>Origin:</strong>
-            <span th:text="${flight.origin}" aria-label="Flight origin">Origin</span> &rarr;
-            <strong>Destination:</strong>
-            <span th:text="${flight.destination}" aria-label="Flight destination">Destination</span>
+            <strong>Origin:</strong> <span th:text="${flight.origin}">Origin</span> &rarr;
+            <strong>Destination:</strong> <span th:text="${flight.destination}">Destination</span>
           </p>
           <p>
-            <strong>Departure:</strong>
-            <span th:text="${flight.departureTime}" aria-label="Departure time">Dep</span><br>
-            <strong>Arrival:</strong>
-            <span th:text="${flight.arrivalTime}" aria-label="Arrival time">Arr</span>
+            <strong>Departure:</strong> <span th:text="${flight.departureTime}">Dep</span><br>
+            <strong>Arrival:</strong> <span th:text="${flight.arrivalTime}">Arr</span>
           </p>
           <p>
-            <strong>Price:</strong> $<span th:text="${flight.price}" aria-label="Price in US dollars">Price</span>
+            <strong>Price:</strong> $<span th:text="${flight.price}">Price</span>
           </p>
-          <!-- TODO (Milestone 3): Add section for booking confirmation or flight details -->
+
+          <!-- TODO: Milestone Three – Add “Book Flight” button to initiate booking logic for logged-in users -->
         </div>
       </div>
+
     </section>
   </main>
 
-  <!-- Bootstrap JS bundle -->
+  <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

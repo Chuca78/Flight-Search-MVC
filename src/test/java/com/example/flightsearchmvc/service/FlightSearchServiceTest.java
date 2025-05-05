@@ -1,77 +1,105 @@
 package com.example.flightsearchmvc.service;
 
-import com.example.flightsearchmvc.model.Flight;
+import com.example.flightsearchmvc.config.AmadeusProperties;
+import com.example.flightsearchmvc.model.FlightResult;
 import com.example.flightsearchmvc.model.FlightSearchRequest;
-import com.example.flightsearchmvc.repository.FlightRepository;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.*;
+import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
-import java.util.List;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.when;
 
 /**
- * Unit tests for the FlightSearchService.
- *
- * Uses Mockito to mock the FlightRepository and isolate service logic.
+ * Unit test for the FlightSearchService class,
+ * specifically testing the integration with the mocked Amadeus API.
  */
 class FlightSearchServiceTest {
 
     /**
-     * Test that verifies valid search request returns expected flight results.
+     * Tests that searchWithAmadeus() correctly parses a mocked Amadeus API response
+     * and returns expected flight results.
      */
+    @SuppressWarnings("unchecked")
     @Test
-    void searchFlights_returnsResultsForValidRequest() {
-        // Arrange
-        FlightRepository mockRepo = mock(FlightRepository.class);
-        FlightSearchService service = new FlightSearchService(mockRepo);
+    void searchWithAmadeus_returnsMockedFlightResults() {
+        // Mock the external RestTemplate and Amadeus config properties
+        RestTemplate mockRestTemplate = Mockito.mock(RestTemplate.class);
+        AmadeusProperties mockProps = Mockito.mock(AmadeusProperties.class);
 
+        // Set up expected property values
+        String mockTokenUrl = "https://test.api.amadeus.com/v1/security/oauth2/token";
+        String mockApiUrl = "https://test.api.amadeus.com/v2/shopping/flight-offers";
+        String mockAccessToken = "mocked_token";
+
+        // Configure mocked properties to return dummy credentials and URLs
+        when(mockProps.getTokenUrl()).thenReturn(mockTokenUrl);
+        when(mockProps.getClientId()).thenReturn("mock_client_id");
+        when(mockProps.getClientSecret()).thenReturn("mock_client_secret");
+
+        // Simulate a successful token response
+        Map<String, Object> tokenMap = new HashMap<>();
+        tokenMap.put("access_token", mockAccessToken);
+        ResponseEntity<Map<String, Object>> tokenResponse = new ResponseEntity<>(tokenMap, HttpStatus.OK);
+        when(mockRestTemplate.exchange(
+                eq(mockTokenUrl),
+                eq(HttpMethod.POST),
+                any(HttpEntity.class),
+                any(ParameterizedTypeReference.class)
+        )).thenReturn(tokenResponse);
+
+        // Simulate a successful flight offer response from Amadeus
+        String apiJson = """
+        {
+          "data": [
+            {
+              "itineraries": [{
+                "segments": [{
+                  "carrierCode": "UA",
+                  "departure": {"at": "2025-05-05T08:00"},
+                  "arrival": {"at": "2025-05-05T11:00"}
+                }]
+              }],
+              "price": {
+                "total": "350.00"
+              }
+            }
+          ]
+        }""";
+
+        ResponseEntity<String> apiResponse = new ResponseEntity<>(apiJson, HttpStatus.OK);
+        when(mockRestTemplate.exchange(
+                startsWith(mockApiUrl),
+                eq(HttpMethod.GET),
+                any(HttpEntity.class),
+                eq(String.class),
+                anyMap()
+        )).thenReturn(apiResponse);
+
+        // Construct the search request
         FlightSearchRequest request = new FlightSearchRequest();
-        request.setOrigin("New York");
-        request.setDestination("London");
-        request.setDate(LocalDate.of(2025, 5, 1));
+        request.setOrigin("CID");
+        request.setDestination("CLT");
+        request.setDate(LocalDate.of(2025, 5, 5));
+        request.setPassengers(1);
 
-        List<Flight> mockFlights = List.of(new Flight(
-            "New York", "London", request.getDate(), "TestAir", 250.0,
-            LocalTime.of(7, 0), LocalTime.of(19, 0)
-        ));
+        // Initialize service with mocked dependencies
+        FlightSearchService service = new FlightSearchService(mockRestTemplate, mockProps);
 
-        when(mockRepo.findByOriginAndDestinationAndDate("New York", "London", request.getDate()))
-            .thenReturn(mockFlights);
+        // Perform the search using the mocked Amadeus API
+        List<FlightResult> results = service.searchWithAmadeus(request);
 
-        // Act
-        List<Flight> results = service.searchFlights(request);
-
-        // Assert
-        assertNotNull(results);
-        assertEquals(1, results.size());
-        assertEquals("London", results.get(0).getDestination());
-    }
-
-    /**
-     * Test that verifies service returns an empty list when no flights match the request.
-     */
-    @Test
-    void searchFlights_returnsEmptyForNoMatch() {
-        // Arrange
-        FlightRepository mockRepo = mock(FlightRepository.class);
-        FlightSearchService service = new FlightSearchService(mockRepo);
-
-        FlightSearchRequest request = new FlightSearchRequest();
-        request.setOrigin("Nowhere");
-        request.setDestination("Atlantis");
-        request.setDate(LocalDate.of(2025, 5, 1));
-
-        when(mockRepo.findByOriginAndDestinationAndDate("Nowhere", "Atlantis", request.getDate()))
-            .thenReturn(List.of());
-
-        // Act
-        List<Flight> results = service.searchFlights(request);
-
-        // Assert
-        assertNotNull(results);
-        assertTrue(results.isEmpty());
+        // Validate the results
+        assertNotNull(results, "Results list should not be null");
+        assertFalse(results.isEmpty(), "Results list should not be empty");
+        assertEquals("UA", results.get(0).getAirline(), "Airline code should match mock data");
+        assertEquals("CID", results.get(0).getOrigin(), "Origin should match request");
+        assertEquals("CLT", results.get(0).getDestination(), "Destination should match request");
     }
 }
