@@ -38,7 +38,7 @@ public class FlightController {
     @GetMapping("/")
     public String showSearchForm(Model model) {
         model.addAttribute("flightSearchRequest", new FlightSearchRequest());
-        return "index";
+        return "search";
     }
 
     /**
@@ -57,7 +57,7 @@ public class FlightController {
     ) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("error", "Invalid search input. Please check all fields.");
-            return "index";
+            return "search";
         }
 
         try {
@@ -67,6 +67,6 @@ public class FlightController {
             model.addAttribute("error", "Unable to fetch flight data: " + e.getMessage());
         }
 
-        return "index";
+        return "search";
     }
 }
