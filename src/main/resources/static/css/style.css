@@ -22,7 +22,6 @@ body {
   color: var(--text-color);
   margin: 0;
   padding: 0;
-  display: flex;
   justify-content: center;
   align-items: center;
   min-height: 100vh;
@@ -43,15 +42,19 @@ body {
   color: white;
 }
 
+.hero-image h1,
+.hero-image p {
+  color: #111 !important; /* override any browser default */
+}
+
 .hero-image .position-relative {
-  z-index: 2;
   position: relative;
+  z-index: 2;
 }
 
 .hero-image h1,
 .hero-image p {
-  color: #1a1a1a;
-  font-weight: 700;
+  color: #111; /* Near black for contrast */
 }
 
 @media (prefers-color-scheme: light) {

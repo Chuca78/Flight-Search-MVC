@@ -4,6 +4,7 @@
       lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="color-scheme" content="light only">
     <title layout:title-pattern="$DECORATOR_TITLE - Flight App">Flight App</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link th:href="@{/css/style.css}" rel="stylesheet">
@@ -11,26 +12,27 @@
 </head>
 <body>
 
-<header class="hero-image text-white mb-4" role="banner">
-  <!-- Navigation Bar -->
-  <div class="d-flex justify-content-end gap-2 p-3">
-    <a th:href="@{/}" class="btn btn-light btn-sm">Search</a>
-    <a th:href="@{/login}" class="btn btn-light btn-sm me-2" th:if="${session.username == null}">Login</a>
-    <a th:href="@{/register}" class="btn btn-light btn-sm me-2" th:if="${session.username == null}">Register</a>
+<!-- Hero Banner with login status -->
+<header class="hero-image text-white text-center mb-5" role="banner">
+    <div class="position-relative p-5">
 
-    <span th:if="${session.username != null}">
-      <span class="text-white me-2">Welcome, <b th:text="${session.username}">User</b></span>
-      <a th:href="@{/logout}" class="btn btn-danger btn-sm">Logout</a>
-    </span>
-  </div>
+        <h1 class="display-5 fw-bold">Find Your Next Adventure</h1>
+        <p class="lead">Book flights quickly and easily</p>
 
-  <!-- Hero Text Centered -->
-  <div class="position-relative text-center p-5">
-    <h1 class="display-5 fw-bold">Find Your Next Adventure</h1>
-    <p class="lead">Book flights quickly and easily</p>
-  </div>
+        <!-- Login/Register or Welcome/Logout -->
+        <div class="mt-4">
+            <span th:if="${session.username != null}">
+                <span class="text-white me-3">Welcome, <b th:text="${session.username}">User</b></span>
+                <a th:href="@{/logout}" class="btn btn-danger btn-sm">Logout</a>
+            </span>
+            <span th:if="${session.username == null}">
+                <a th:href="@{/login}" class="btn btn-primary btn-sm me-2">Login</a>
+                <a th:href="@{/register}" class="btn btn-primary btn-sm">Register</a>
+            </span>
+        </div>
+
+    </div>
 </header>
-
 <main class="container my-5">
     <section layout:fragment="content"></section>
 </main>
