@@ -15,8 +15,9 @@
   <!-- Navigation Bar -->
   <div class="d-flex justify-content-end gap-2 p-3">
     <a th:href="@{/}" class="btn btn-light btn-sm">Search</a>
-    <a th:href="@{/login}" class="btn btn-light btn-sm" th:if="${session.username == null}">Login</a>
-    <a th:href="@{/register}" class="btn btn-light btn-sm" th:if="${session.username == null}">Register</a>
+    <a th:href="@{/login}" class="btn btn-light btn-sm me-2" th:if="${session.username == null}">Login</a>
+    <a th:href="@{/register}" class="btn btn-light btn-sm me-2" th:if="${session.username == null}">Register</a>
+
     <span th:if="${session.username != null}">
       <span class="text-white me-2">Welcome, <b th:text="${session.username}">User</b></span>
       <a th:href="@{/logout}" class="btn btn-danger btn-sm">Logout</a>

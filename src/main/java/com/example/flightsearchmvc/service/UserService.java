@@ -3,7 +3,6 @@ package com.example.flightsearchmvc.service;
 import com.example.flightsearchmvc.model.User;
 import com.example.flightsearchmvc.model.Users;
 import jakarta.xml.bind.*;
-
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -13,6 +12,9 @@ import java.io.File;
  */
 @Service
 public class UserService {
+
+    // Writable external path for persistence
+    private static final String USER_FILE_PATH = "user-data/users.xml";
 
     /**
      * Validates login credentials against users.xml.
@@ -37,7 +39,7 @@ public class UserService {
     public boolean userExists(String username) {
         Users users = loadUsers();
         return users.getUserList().stream()
-                .anyMatch(user -> user.getUsername().equals(username));
+                .anyMatch(user -> user.getUsername().equalsIgnoreCase(username));
     }
 
     /**
@@ -45,6 +47,7 @@ public class UserService {
      *
      * @param username the new user's username
      * @param password the new user's password
+     * @return true if the user was successfully added; false if the username already exists
      */
     public boolean addUser(String username, String password) {
         Users users = loadUsers();
@@ -67,19 +70,23 @@ public class UserService {
     }
 
     /**
-     * Loads users from the users.xml file using JAXB.
+     * Loads users from the external users.xml file using JAXB.
      *
      * @return a Users object containing a list of User entries
      */
     private Users loadUsers() {
         try {
-            File xmlFile = new File("src/main/resources/users.xml");
+            File xmlFile = new File(USER_FILE_PATH);
+            if (!xmlFile.exists()) {
+                return new Users(); // fallback: empty list
+            }
+
             JAXBContext context = JAXBContext.newInstance(Users.class);
             Unmarshaller unmarshaller = context.createUnmarshaller();
             return (Users) unmarshaller.unmarshal(xmlFile);
         } catch (Exception e) {
             e.printStackTrace();
-            return new Users(); // fallback: empty list
+            return new Users(); // fallback
         }
     }
 
@@ -90,13 +97,14 @@ public class UserService {
      */
     private void saveUsers(Users users) {
         try {
+            File xmlFile = new File(USER_FILE_PATH);
+            xmlFile.getParentFile().mkdirs(); // Ensure user-data directory exists
+
             JAXBContext context = JAXBContext.newInstance(Users.class);
             Marshaller marshaller = context.createMarshaller();
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 
-            File file = new File("src/main/resources/users.xml");
-            marshaller.marshal(users, file);
-
+            marshaller.marshal(users, xmlFile);
         } catch (Exception e) {
             e.printStackTrace();
         }

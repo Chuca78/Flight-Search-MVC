@@ -1,6 +1,9 @@
 package com.example.flightsearchmvc.controller;
 
 import com.example.flightsearchmvc.service.UserService;
+
+import jakarta.servlet.http.HttpSession;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -35,14 +38,16 @@ public class LoginController {
      */
     @PostMapping("/login")
     public String handleLogin(@RequestParam String username,
-                              @RequestParam String password,
-                              Model model) {
+                            @RequestParam String password,
+                            Model model,
+                            HttpSession session) {
         boolean valid = userService.validateUser(username, password);
 
         if (valid) {
+            session.setAttribute("username", username);
             return "redirect:/dashboard";
         } else {
-                model.addAttribute("error", "Invalid username or password.");
+            model.addAttribute("error", "Invalid username or password.");
             return "login";
         }
     }
@@ -73,5 +78,12 @@ public class LoginController {
     @GetMapping("/dashboard")
     public String showDashboard() {
         return "dashboard"; // Returns dashboard.html
+    }
+
+    // Allow logout after successful login
+    @GetMapping("/logout")
+    public String handleLogout(HttpSession session) {
+        session.invalidate();
+        return "redirect:/login";
     }
 }
