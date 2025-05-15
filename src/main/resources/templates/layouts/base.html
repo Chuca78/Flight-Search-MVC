@@ -19,18 +19,14 @@
         <h1 class="display-5 fw-bold">Find Your Next Adventure</h1>
         <p class="lead">Book flights quickly and easily</p>
 
-        <!-- Login/Register or Welcome/Logout -->
+        <!-- Login or Welcome/Logout -->
         <div class="mt-4">
-            <span th:if="${session.username != null}">
-                <span class="text-white me-3">Welcome, <b th:text="${session.username}">User</b></span>
-                <a th:href="@{/logout}" class="btn btn-danger btn-sm">Logout</a>
-            </span>
-            <span th:if="${session.username == null}">
-                <a th:href="@{/login}" class="btn btn-primary btn-sm me-2">Login</a>
-                <a th:href="@{/register}" class="btn btn-primary btn-sm">Register</a>
-            </span>
+            <div th:if="${session.username != null}">
+            <a th:href="@{/logout}" class="btn btn-danger">Logout</a>
         </div>
-
+        <div th:if="${session.username == null}">
+            <a th:href="@{/login}" class="btn btn-primary login-btn">Login</a>
+        </div>
     </div>
 </header>
 <main class="container my-5">
