@@ -37,6 +37,7 @@ public class FlightController {
      */
     @GetMapping("/")
     public String showSearchForm(Model model) {
+        // Initialize a new form object to bind user input
         model.addAttribute("flightSearchRequest", new FlightSearchRequest());
         return "search";
     }
@@ -55,15 +56,20 @@ public class FlightController {
             BindingResult bindingResult,
             Model model
     ) {
+        // Return to form if validation errors exist
         if (bindingResult.hasErrors()) {
             model.addAttribute("error", "Invalid search input. Please check all fields.");
             return "search";
         }
 
         try {
+            // Perform flight search using Amadeus API
             List<FlightResult> results = flightSearchService.searchWithAmadeus(request);
+
+            // Add results to model for rendering
             model.addAttribute("flightResults", results);
         } catch (Exception e) {
+            // Display error message if search fails
             model.addAttribute("error", "Unable to fetch flight data: " + e.getMessage());
         }
 

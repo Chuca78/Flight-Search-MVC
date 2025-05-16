@@ -7,12 +7,21 @@
 </head>
 <body>
 
+<!-- Injects into the "content" section of base.html -->
 <section layout:fragment="content" class="text-center">
+
+    <!-- Page heading -->
     <h2>Booking Confirmed</h2>
+
+    <!-- Personalized confirmation message using session username -->
     <p>Thank you, <strong th:text="${username}">User</strong>! Your flight is booked.</p>
 
+    <!-- Card displaying booking summary -->
     <div class="card mx-auto my-4 p-3" style="max-width: 500px;">
+        <!-- Displays the airline name -->
         <h5 th:text="${airline}">Airline</h5>
+
+        <!-- Flight details: route, time, and price -->
         <p>
             <strong>From:</strong> <span th:text="${origin}"></span> →
             <strong>To:</strong> <span th:text="${destination}"></span><br>
@@ -22,6 +31,7 @@
         </p>
     </div>
 
+    <!-- Button to return to the search form -->
     <a th:href="@{/}" class="btn btn-primary">Back to Search</a>
 </section>
 

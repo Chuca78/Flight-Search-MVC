@@ -10,13 +10,15 @@ import java.util.List;
 
 /**
  * Wrapper class for a list of users, used for JAXB XML binding.
+ * This corresponds to the root element <users> in users.xml.
  */
 @XmlRootElement(name = "users")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Users {
 
+    /** List of user entries parsed from or written to users.xml */
     @XmlElement(name = "user")
-    private List<User> userList = new ArrayList<>(); // List of users parsed from XML
+    private List<User> userList = new ArrayList<>();
 
     /**
      * Returns the list of users.

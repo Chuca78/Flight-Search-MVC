@@ -7,76 +7,63 @@
 </head>
 <body>
 
+<!-- Page content inserted into base layout -->
 <section layout:fragment="content">
-    
-    <!-- Welcome Card if Logged In -->
+
+    <!-- Display a welcome message only if the user is logged in -->
     <div th:if="${session.username != null}" class="text-center mb-3">
-    <small class="text-muted">
-        Welcome, <strong th:text="${session.username}">User</strong>! You are logged in. You can now search and book flights.
-    </small>
+        <small class="text-muted">
+            Welcome, <strong th:text="${session.username}">User</strong>! You are logged in. You can now search and book flights.
+        </small>
     </div>
 
-
-    <!-- Flight Search Form -->
+    <!-- Flight Search Heading -->
     <h2 class="mb-4 text-center">Search for Flights</h2>
 
+    <!-- Flight Search Form: binds to flightSearchRequest model -->
     <form th:action="@{/search(source='amadeus')}" method="post" th:object="${flightSearchRequest}" class="row g-3">
+        <!-- Origin Field -->
         <div class="col-md-6">
             <label class="form-label">Origin</label>
             <input type="text" th:field="*{origin}" class="form-control" placeholder="e.g., JFK" required>
         </div>
+
+        <!-- Destination Field -->
         <div class="col-md-6">
             <label class="form-label">Destination</label>
             <input type="text" th:field="*{destination}" class="form-control" placeholder="e.g., LAX" required>
         </div>
+
+        <!-- Date Field -->
         <div class="col-md-6">
             <label class="form-label">Date</label>
             <input type="date" th:field="*{date}" class="form-control" required>
         </div>
+
+        <!-- Passengers Field -->
         <div class="col-md-6">
             <label class="form-label">Passengers</label>
             <input type="number" th:field="*{passengers}" class="form-control" min="1" max="10" required>
         </div>
+
+        <!-- Submit Button -->
         <div class="col-12 text-center">
             <button type="submit" class="btn btn-primary">Search Flights</button>
         </div>
     </form>
 
-    <!-- Error Message -->
+    <!-- Error Message Display -->
     <div th:if="${error}" class="alert alert-danger mt-4" th:text="${error}"></div>
 
-    <!-- Results -->
+    <!-- Flight Results Display -->
     <div th:if="${flightResults}" class="mt-5">
         <h3>Search Results</h3>
         <div class="row">
+            <!-- Loop through each flight result -->
             <div class="col-md-6" th:each="flight : ${flightResults}">
                 <div class="card mb-3">
                     <div class="card-body">
+                        <!-- Airline Name -->
                         <h5 class="card-title" th:text="${flight.airline}">Airline</h5>
-                        <p class="card-text">
-                            <strong>From:</strong> <span th:text="${flight.origin}"></span> →
-                            <strong>To:</strong> <span th:text="${flight.destination}"></span><br>
-                            <strong>Dep:</strong> <span th:text="${flight.departureTime}"></span><br>
-                            <strong>Arr:</strong> <span th:text="${flight.arrivalTime}"></span><br>
-                            <strong>Price:</strong> $<span th:text="${flight.price}"></span>
-                        </p>
-                        <!-- Book Flight Button (Only if logged in) -->
-                        <form th:if="${session.username != null}" th:action="@{/book}" method="post">
-                            <input type="hidden" name="airline" th:value="${flight.airline}" />
-                            <input type="hidden" name="origin" th:value="${flight.origin}" />
-                            <input type="hidden" name="destination" th:value="${flight.destination}" />
-                            <input type="hidden" name="departureTime" th:value="${flight.departureTime}" />
-                            <input type="hidden" name="arrivalTime" th:value="${flight.arrivalTime}" />
-                            <input type="hidden" name="price" th:value="${flight.price}" />
-                            <button type="submit" class="btn btn-success btn-sm mt-2">Book Flight</button>
-                        </form>
 
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-</body>
-</html>
+                        <!-- Flight Info -->

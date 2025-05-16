@@ -5,8 +5,11 @@
 <head>
     <meta charset="UTF-8">
     <title>Login</title>
+
+    <!-- Link to custom stylesheet -->
     <link rel="stylesheet" th:href="@{/style.css}">
-    
+
+    <!-- Hide hero login button when on login page -->
     <style>
         .login-btn {
             display: none !important;
@@ -15,23 +18,32 @@
 </head>
 <body>
 
+<!-- Main login form section -->
 <section layout:fragment="content" class="col-md-6 offset-md-3">
     <h2 class="mb-4 text-center">Login</h2>
 
+    <!-- POST form submits credentials to /login -->
     <form th:action="@{/login}" method="post" class="mb-3">
+        <!-- Username input -->
         <div class="mb-3">
             <label class="form-label">Username</label>
             <input type="text" name="username" class="form-control" required />
         </div>
+
+        <!-- Password input -->
         <div class="mb-3">
             <label class="form-label">Password</label>
             <input type="password" name="password" class="form-control" required />
         </div>
+
+        <!-- Submit button -->
         <button type="submit" class="btn btn-primary w-100">Login</button>
     </form>
 
+    <!-- Display login error message if login fails -->
     <div th:if="${error}" class="alert alert-danger text-center" th:text="${error}"></div>
 
+    <!-- Link to registration page -->
     <p class="text-center">Don't have an account? <a th:href="@{/register}">Register here</a></p>
 </section>
 

@@ -6,12 +6,12 @@ package com.example.flightsearchmvc.model;
  */
 public class FlightResult {
 
-    private String airline;         // Airline name or carrier code
-    private String origin;          // Origin airport or city code
-    private String destination;     // Destination airport or city code
-    private String departureTime;   // Scheduled departure time
-    private String arrivalTime;     // Scheduled arrival time
-    private double price;           // Ticket price in USD
+    private String airline;
+    private String origin;
+    private String destination;
+    private String departureTime;
+    private String arrivalTime;
+    private double price;
 
     /**
      * Default constructor for frameworks and serialization.
@@ -38,52 +38,98 @@ public class FlightResult {
         this.price = price;
     }
 
-    // Getters and setters
-
+    /**
+     * Gets the airline.
+     * @return airline name
+     */
     public String getAirline() {
         return airline;
     }
 
+    /**
+     * Sets the airline.
+     * @param airline airline name
+     */
     public void setAirline(String airline) {
         this.airline = airline;
     }
 
+    /**
+     * Gets the origin.
+     * @return origin location
+     */
     public String getOrigin() {
         return origin;
     }
 
+    /**
+     * Sets the origin.
+     * @param origin origin location
+     */
     public void setOrigin(String origin) {
         this.origin = origin;
     }
 
+    /**
+     * Gets the destination.
+     * @return destination location
+     */
     public String getDestination() {
         return destination;
     }
 
+    /**
+     * Sets the destination.
+     * @param destination destination location
+     */
     public void setDestination(String destination) {
         this.destination = destination;
     }
 
+    /**
+     * Gets the departure time.
+     * @return departure time
+     */
     public String getDepartureTime() {
         return departureTime;
     }
 
+    /**
+     * Sets the departure time.
+     * @param departureTime departure time
+     */
     public void setDepartureTime(String departureTime) {
         this.departureTime = departureTime;
     }
 
+    /**
+     * Gets the arrival time.
+     * @return arrival time
+     */
     public String getArrivalTime() {
         return arrivalTime;
     }
 
+    /**
+     * Sets the arrival time.
+     * @param arrivalTime arrival time
+     */
     public void setArrivalTime(String arrivalTime) {
         this.arrivalTime = arrivalTime;
     }
 
+    /**
+     * Gets the flight price.
+     * @return ticket price
+     */
     public double getPrice() {
         return price;
     }
 
+    /**
+     * Sets the flight price.
+     * @param price ticket price
+     */
     public void setPrice(double price) {
         this.price = price;
     }

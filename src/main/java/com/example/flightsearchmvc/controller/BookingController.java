@@ -9,15 +9,38 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 
+/**
+ * Controller responsible for handling flight bookings.
+ * Validates session, saves booking data to the H2 database,
+ * and redirects to a confirmation view.
+ */
 @Controller
 public class BookingController {
 
     private final BookingRepository bookingRepository;
 
+    /**
+     * Constructor-based dependency injection of the BookingRepository.
+     *
+     * @param bookingRepository Repository used to persist bookings
+     */
     public BookingController(BookingRepository bookingRepository) {
         this.bookingRepository = bookingRepository;
     }
 
+    /**
+     * Handles the booking request submitted by a logged-in user.
+     *
+     * @param airline        The selected airline name
+     * @param origin         Flight origin code
+     * @param destination    Flight destination code
+     * @param departureTime  Flight departure time
+     * @param arrivalTime    Flight arrival time
+     * @param price          Flight price
+     * @param session        HTTP session to validate logged-in user
+     * @param model          Spring Model to pass data to the view
+     * @return               Confirmation page or redirect to login
+     */
     @PostMapping("/book")
     public String handleBooking(
             @RequestParam String airline,
@@ -29,13 +52,15 @@ public class BookingController {
             HttpSession session,
             Model model) {
 
+        // Check if user is logged in
         String username = (String) session.getAttribute("username");
 
         if (username == null) {
+            // Redirect to login if no session user found
             return "redirect:/login";
         }
 
-        // Save to H2
+        // Build Booking entity from form data
         Booking booking = new Booking();
         booking.setUsername(username);
         booking.setAirline(airline);
@@ -46,9 +71,10 @@ public class BookingController {
         booking.setPrice(price);
         booking.setDate(LocalDate.now());
 
+        // Persist the booking to the H2 database
         bookingRepository.save(booking);
 
-        // Add confirmation attributes
+        // Add attributes to the model for the confirmation view
         model.addAttribute("username", username);
         model.addAttribute("airline", airline);
         model.addAttribute("origin", origin);
@@ -57,6 +83,7 @@ public class BookingController {
         model.addAttribute("arrivalTime", arrivalTime);
         model.addAttribute("price", price);
 
+        // Return the confirmation page
         return "confirmation";
     }
 }

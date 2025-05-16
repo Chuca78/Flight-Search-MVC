@@ -7,22 +7,32 @@
 </head>
 <body>
 
+<!-- Main registration form section -->
 <section layout:fragment="content" class="col-md-6 offset-md-3">
     <h2 class="mb-4 text-center">Register</h2>
 
+    <!-- Form posts to /register to create a new user -->
     <form th:action="@{/register}" method="post">
+        <!-- Username input field -->
         <div class="mb-3">
             <label class="form-label">Username</label>
             <input type="text" name="username" class="form-control" required />
         </div>
+
+        <!-- Password input field -->
         <div class="mb-3">
             <label class="form-label">Password</label>
             <input type="password" name="password" class="form-control" required />
         </div>
+
+        <!-- Submit button for form -->
         <button type="submit" class="btn btn-success w-100">Register</button>
     </form>
 
+    <!-- Error alert for duplicate usernames or form issues -->
     <div th:if="${error}" class="alert alert-danger text-center mt-3" th:text="${error}"></div>
+
+    <!-- Success message with embedded HTML (e.g., link to login) -->
     <div th:if="${success}" class="alert alert-success text-center mt-3" th:utext="${success}"></div>
 </section>
 

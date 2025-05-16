@@ -14,6 +14,11 @@ public class LoginController {
 
     private final UserService userService;
 
+    /**
+     * Constructor-based dependency injection for UserService.
+     *
+     * @param userService the user service to handle login/registration logic
+     */
     public LoginController(UserService userService) {
         this.userService = userService;
     }
@@ -42,12 +47,16 @@ public class LoginController {
                               @RequestParam String password,
                               Model model,
                               HttpSession session) {
+
+        // Validate user credentials
         boolean valid = userService.validateUser(username, password);
 
         if (valid) {
+            // Store username in session on success
             session.setAttribute("username", username);
             return "redirect:/";
         } else {
+            // Return to login with error message
             model.addAttribute("error", "Invalid username or password.");
             return "login";
         }
@@ -77,14 +86,17 @@ public class LoginController {
                                  @RequestParam String password,
                                  Model model,
                                  HttpSession session) {
+
+        // Try to add user; check for duplicates
         boolean added = userService.addUser(username, password);
 
         if (!added) {
+            // Show error if username is taken
             model.addAttribute("error", "Username already exists.");
             return "register";
         }
 
-        // Auto-login after registration
+        // Auto-login after successful registration
         session.setAttribute("username", username);
         return "redirect:/";
     }
@@ -97,6 +109,7 @@ public class LoginController {
      */
     @GetMapping("/logout")
     public String handleLogout(HttpSession session) {
+        // Clear all session data
         session.invalidate();
         return "redirect:/login";
     }

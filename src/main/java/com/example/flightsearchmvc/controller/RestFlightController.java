@@ -40,12 +40,16 @@ public class RestFlightController {
             @ModelAttribute FlightSearchRequest request,
             @RequestParam(value = "source", defaultValue = "local") String source) {
         try {
+            // Determine the source of flight data (Amadeus API or local fallback)
             List<FlightResult> results = "amadeus".equalsIgnoreCase(source)
                     ? flightSearchService.searchWithAmadeus(request)
                     : flightSearchService.searchFlights(request);
 
+            // Return successful JSON response
             return ResponseEntity.ok(results);
+
         } catch (Exception e) {
+            // Return generic error with status 500 and exception message
             return ResponseEntity.status(500).body("Error: " + e.getMessage());
         }
     }
