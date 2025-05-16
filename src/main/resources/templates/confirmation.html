@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/base}">
+<head>
+    <title>Booking Confirmation</title>
+</head>
+<body>
+
+<section layout:fragment="content" class="text-center">
+    <h2>Booking Confirmed</h2>
+    <p>Thank you, <strong th:text="${username}">User</strong>! Your flight is booked.</p>
+
+    <div class="card mx-auto my-4 p-3" style="max-width: 500px;">
+        <h5 th:text="${airline}">Airline</h5>
+        <p>
+            <strong>From:</strong> <span th:text="${origin}"></span> →
+            <strong>To:</strong> <span th:text="${destination}"></span><br>
+            <strong>Departure:</strong> <span th:text="${departureTime}"></span><br>
+            <strong>Arrival:</strong> <span th:text="${arrivalTime}"></span><br>
+            <strong>Price:</strong> $<span th:text="${price}"></span>
+        </p>
+    </div>
+
+    <a th:href="@{/}" class="btn btn-primary">Back to Search</a>
+</section>
+
+</body>
+</html>

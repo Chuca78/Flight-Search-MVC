@@ -25,9 +25,13 @@ public class FlightSearchMvcApplication {
     public static void main(String[] args) {
         SpringApplication.run(FlightSearchMvcApplication.class, args);
     }
+
+    /**
+     * Registers a RestTemplate bean for external HTTP calls.
+     */
     @Bean
     public RestTemplate restTemplate() {
         return new RestTemplate();
-
     }
+
 }

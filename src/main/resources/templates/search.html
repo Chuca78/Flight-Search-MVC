@@ -60,6 +60,17 @@
                             <strong>Arr:</strong> <span th:text="${flight.arrivalTime}"></span><br>
                             <strong>Price:</strong> $<span th:text="${flight.price}"></span>
                         </p>
+                        <!-- Book Flight Button (Only if logged in) -->
+                        <form th:if="${session.username != null}" th:action="@{/book}" method="post">
+                            <input type="hidden" name="airline" th:value="${flight.airline}" />
+                            <input type="hidden" name="origin" th:value="${flight.origin}" />
+                            <input type="hidden" name="destination" th:value="${flight.destination}" />
+                            <input type="hidden" name="departureTime" th:value="${flight.departureTime}" />
+                            <input type="hidden" name="arrivalTime" th:value="${flight.arrivalTime}" />
+                            <input type="hidden" name="price" th:value="${flight.price}" />
+                            <button type="submit" class="btn btn-success btn-sm mt-2">Book Flight</button>
+                        </form>
+
                     </div>
                 </div>
             </div>
