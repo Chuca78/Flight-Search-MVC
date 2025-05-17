@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<users>
+    <user>
+        <username>validuser</username>
+        <password>validpass</password>
+    </user>
+    <user>
+        <username>testuser</username>
+        <password>testpass</password>
+    </user>
+    <user>
+        <username>junit_user_1747447256640</username>
+        <password>testpass</password>
+    </user>
+    <user>
+        <username>junit_user_1747447282983</username>
+        <password>testpass</password>
+    </user>
+    <user>
+        <username>junit_user_1747447901059</username>
+        <password>testpass</password>
+    </user>
+</users>
