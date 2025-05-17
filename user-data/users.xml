@@ -1,55 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <users>
     <user>
+        <username>admin</username>
+        <password>adminpass</password>
+    </user>
+    <user>
         <username>validuser</username>
         <password>validpass</password>
     </user>
     <user>
-        <username>testuser</username>
-        <password>testpass</password>
-    </user>
-    <user>
         <username>junit_user_1747447256640</username>
         <password>testpass</password>
-    </user>
-    <user>
-        <username>junit_user_1747447282983</username>
-        <password>testpass</password>
-    </user>
-    <user>
-        <username>junit_user_1747447901059</username>
-        <password>testpass</password>
-    </user>
-    <user>
-        <username>tim</username>
-        <password>Password</password>
-    </user>
-    <user>
-        <username>tim2</username>
-        <password>Password</password>
-    </user>
-    <user>
-        <username>tim3</username>
-        <password>Password</password>
-    </user>
-    <user>
-        <username>tim4</username>
-        <password>Password</password>
-    </user>
-    <user>
-        <username>tim5</username>
-        <password>Password</password>
-    </user>
-    <user>
-        <username>tim6</username>
-        <password>Password</password>
-    </user>
-    <user>
-        <username>but</username>
-        <password>ass</password>
-    </user>
-    <user>
-        <username>johnr</username>
-        <password>1928</password>
     </user>
 </users>
