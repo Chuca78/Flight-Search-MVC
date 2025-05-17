@@ -69,15 +69,17 @@ This Spring Boot web application allows users to search and book flights by ente
 
 ---
 
-## Testing
+ ## Testing
 
-The following test classes are included and passing:
+ The following test classes are included and passing:
 
-- `FlightSearchServiceTest.java`
-- `FlightSearchRequestTest.java`
-- `FlightControllerTest.java`
-- `RestFlightControllerTest.java`
-- `FlightSearchMvcApplicationTests.java`
++ - `BookingControllerTest.java`
++ - `UserServiceTest.java`
+ - `FlightSearchServiceTest.java`
+ - `FlightSearchRequestTest.java`
+ - `FlightControllerTest.java`
+ - `RestFlightControllerTest.java`
+ - `FlightSearchMvcApplicationTests.java`
 
 ```bash
 ./mvnw clean test
@@ -125,7 +127,7 @@ The following test classes are included and passing:
 
 - Added XML user registration and login system with session control
 - Implemented "Book Flight" button for logged-in users only
-- Persisted booking details to H2 database using Spring Data JPA
++ Booking data saved to an in-memory H2 database via Spring Data JPA, visible through the `/h2-console`
 - Displayed booking confirmation with details from session and POST
 - Enabled and validated H2 console integration at `/h2-console`
 - Reviewed and documented all major classes with JavaDoc and comments
@@ -137,10 +139,9 @@ The following test classes are included and passing:
 
 - **Carrier Code Mapping:** Airline codes returned from the Amadeus API (e.g., “UA”) are not mapped to full airline names like “United Airlines.” Adding a lookup or API integration could improve readability.
 - **Lack of Visual Feedback:** The UI does not currently display a loading indicator or feedback during slow API responses, which may affect user experience.
-- **Basic Session Authentication:** The application uses session-based login via XML-backed user data. While functional, it does not use Spring Security or token-based authentication.
++ **Session-Based Login Only:** The application uses basic session-based login validated against an XML file. It does not include Spring Security, token-based auth, or role-based access control.
 - **No Booking History View:** Although flight bookings are saved to an H2 database, users currently have no way to view or manage their past bookings in the UI.
   
-
 ---
 
 ## Contact

@@ -5,12 +5,12 @@ import com.example.flightsearchmvc.service.FlightSearchService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.web.context.WebApplicationContext;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
 
 import java.util.List;
 
@@ -19,22 +19,25 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
- * Unit tests for {@link FlightController}, which handles the
- * user-facing form-based flight search functionality.
+ * Integration test for {@link FlightController}, which handles
+ * user-facing form-based flight search via Thymeleaf.
  */
-@WebMvcTest(FlightController.class)
+@SpringBootTest
+@AutoConfigureMockMvc
 class FlightControllerTest {
 
-    @Autowired
-    private WebApplicationContext context;
-
+    private final WebApplicationContext context;
     private MockMvc mockMvc;
 
     @MockitoBean
     private FlightSearchService flightSearchService;
 
+    public FlightControllerTest(WebApplicationContext context) {
+        this.context = context;
+    }
+
     /**
-     * Initializes MockMvc using the application context before each test.
+     * Initializes MockMvc before each test using the full application context.
      */
     @BeforeEach
     void setUp() {
@@ -50,7 +53,7 @@ class FlightControllerTest {
     @Test
     void processSearch_validInput_returnsSearchViewWithResults() throws Exception {
         Mockito.when(flightSearchService.searchWithAmadeus(any(FlightSearchRequest.class)))
-                .thenReturn(List.of()); // Simulate an empty result list
+                .thenReturn(List.of()); // Simulate empty results for valid search
 
         mockMvc.perform(post("/search")
                         .param("origin", "CID")
@@ -63,17 +66,17 @@ class FlightControllerTest {
     }
 
     /**
-     * Verifies that invalid input (missing required fields):
-     * - Returns HTTP 200
-     * - Renders the "search" view
-     * - Provides a model error attribute
+     * Verifies that missing required form inputs:
+     * - Return HTTP 200
+     * - Redisplay the "search" view
+     * - Populate the model with an error message
      */
     @Test
     void processSearch_invalidInput_returnsSearchViewWithError() throws Exception {
         mockMvc.perform(post("/search")
-                        .param("origin", "")          // Required field missing
+                        .param("origin", "")           // Missing origin
                         .param("destination", "CLT")
-                        .param("date", "")             // Required field missing
+                        .param("date", "")             // Missing date
                         .param("passengers", "1"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("search"))
