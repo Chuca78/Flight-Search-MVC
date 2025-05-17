@@ -38,26 +38,33 @@ Completed:
 ---
 
 ## Milestone Three: Security, Validation, and Final Enhancements
-- [ ] Perform full form validation using Jakarta Validation API
-- [ ] Handle invalid inputs with UI error messaging
-- [ ] Structure exception handling and error messages in REST and MVC controllers
-- [ ] Verify that the app runs cleanly with no runtime or test errors
-- [ ] Add date validation rule (e.g., no past dates — optional)
-- [ ] Consider front-end client validation for improved UX (HTML5 or JS)
-- [ ] Final polish for UI clarity and responsiveness (if needed)
+- [x] Perform full form validation using Jakarta Validation API
+- [x] Handle invalid inputs with UI error messaging
+- [x] Structure exception handling and error messages in REST and MVC controllers
+- [x] Verify that the app runs cleanly with no runtime or test errors
+- [x] Final polish for UI clarity and responsiveness (if needed)
+- [x] Add additional unit tests to  cover added controllers
 
 ---
 
 ## Final Submission: Clean-Up and Packaging
-To Do:
-- [ ] Finalize this `TODO.md` and mark all rubric goals
-- [ ] Update `README.md` with build/test/run instructions
+- [ ] Finalize `TODO.md` and ensure rubric alignment
+- [ ] Update `README.md` with any last changes or improvements
+- [ ] Consider updating logic to include search by city as well as airport code
+- [ ] Add optional JavaScript validation for:
+  - [ ] Disallowing past travel dates on the client side
+  - [ ] Preventing empty form submissions (redundant with backend, but improves UX)
+- [ ] Perform a full test run:
+  - [ ] Web form (`/`)
+  - [ ] REST API (`/api/search`)
+  - [ ] Auth API (`/api/auth/login`, `/api/auth/register`)
+- [ ] Clean up project files, remove unused assets
 - [ ] Create `.zip` archive with:
   - Java source files
   - HTML/Thymeleaf templates
   - `application.properties`
   - `README.md` and `TODO.md`
-- [ ] Perform one last functional test for both `/` and `/api/search` with live and dummy modes
-- [ ] Ensure clean and professional presentation for submission
+  - Any test data or test files required for evaluation
+- [ ] Review and polish all UI and templates for visual consistency and usability
 
 ---

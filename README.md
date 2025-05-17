@@ -73,8 +73,8 @@ This Spring Boot web application allows users to search and book flights by ente
 
  The following test classes are included and passing:
 
-+ - `BookingControllerTest.java`
-+ - `UserServiceTest.java`
+ - `BookingControllerTest.java`
+ - `UserServiceTest.java`
  - `FlightSearchServiceTest.java`
  - `FlightSearchRequestTest.java`
  - `FlightControllerTest.java`
@@ -130,6 +130,9 @@ This Spring Boot web application allows users to search and book flights by ente
 + Booking data saved to an in-memory H2 database via Spring Data JPA, visible through the `/h2-console`
 - Displayed booking confirmation with details from session and POST
 - Enabled and validated H2 console integration at `/h2-console`
+- Implemented AuthRestController for RESTful login/register responses (no redirects)
+- Added unit tests for authentication and booking logic, ensuring coverage of core logic
+- Completed full Jakarta Validation of flight search form fields
 - Reviewed and documented all major classes with JavaDoc and comments
 - Cleaned up unused files and updated project structure
 
@@ -141,7 +144,9 @@ This Spring Boot web application allows users to search and book flights by ente
 - **Lack of Visual Feedback:** The UI does not currently display a loading indicator or feedback during slow API responses, which may affect user experience.
 + **Session-Based Login Only:** The application uses basic session-based login validated against an XML file. It does not include Spring Security, token-based auth, or role-based access control.
 - **No Booking History View:** Although flight bookings are saved to an H2 database, users currently have no way to view or manage their past bookings in the UI.
-  
+ - **No Front-End Date Validation:** The flight date input can be set to a past date. This is validated server-side but not blocked by the UI.
+ - **No Front-End Date Validation:** The flight date input can be set to a past date. This is validated server-side but not blocked by the UI.
+
 ---
 
 ## Contact

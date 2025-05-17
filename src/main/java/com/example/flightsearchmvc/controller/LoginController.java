@@ -4,7 +4,9 @@ import com.example.flightsearchmvc.service.UserService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  * Controller for handling login, registration, and logout.
@@ -29,9 +31,20 @@ public class LoginController {
      * @return the login view
      */
     @GetMapping("/login")
-    public String showLoginForm() {
-        return "login";
-    }
+    public String showLoginForm(@RequestParam(value = "logoutSuccess", required = false) String logoutSuccess,
+                            HttpSession session,
+                            Model model) {
+        // Check if there's a success message from registration
+        Object registrationSuccess = session.getAttribute("registrationSuccess");
+        if (registrationSuccess != null) {
+            model.addAttribute("registrationSuccess", registrationSuccess);
+            session.removeAttribute("registrationSuccess");  // Clear it after one-time use
+        }
+        if ("true".equals(logoutSuccess)) {
+            model.addAttribute("logoutSuccess", "You have been logged out successfully.");
+        }
+            return "login";
+        }
 
     /**
      * Handles login form submission and stores user in session.
@@ -96,9 +109,9 @@ public class LoginController {
             return "register";
         }
 
-        // Auto-login after successful registration
-        session.setAttribute("username", username);
-        return "redirect:/";
+        // Redirect to login after successful registration
+        session.setAttribute("registrationSuccess", "Registration successful! You can now log in.");
+        return "redirect:/login";
     }
 
     /**
@@ -109,8 +122,7 @@ public class LoginController {
      */
     @GetMapping("/logout")
     public String handleLogout(HttpSession session) {
-        // Clear all session data
-        session.invalidate();
-        return "redirect:/login";
+        session.invalidate();  // Clear all session data
+        return "redirect:/login?logoutSuccess=true";
     }
 }

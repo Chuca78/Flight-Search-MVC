@@ -4,12 +4,26 @@
       layout:decorate="~{layouts/base}">
 <head>
     <title>Register</title>
+
+    <!-- Link to custom stylesheet -->
+    <link rel="stylesheet" th:href="@{/style.css}">
+
+   <!-- Hide hero login/register button when on login/register page -->
+    <style>
+        .login-btn {
+            display: none !important;
+        }
+    </style>
+    <style>
+        .register-btn {
+            display: none !important;
+        }
+    </style>
 </head>
 <body>
 
 <!-- Main registration form section -->
 <section layout:fragment="content" class="col-md-6 offset-md-3">
-    <h2 class="mb-4 text-center">Register</h2>
 
     <!-- Form posts to /register to create a new user -->
     <form th:action="@{/register}" method="post">
@@ -32,8 +46,8 @@
     <!-- Error alert for duplicate usernames or form issues -->
     <div th:if="${error}" class="alert alert-danger text-center mt-3" th:text="${error}"></div>
 
-    <!-- Success message with embedded HTML (e.g., link to login) -->
-    <div th:if="${success}" class="alert alert-success text-center mt-3" th:utext="${success}"></div>
+    <!-- Link to login page -->
+    <p class="text-center">Already have an account? <a th:href="@{/login}">Login here</a></p>
 </section>
 
 </body>

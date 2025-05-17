@@ -9,9 +9,10 @@
     <!-- Link to custom stylesheet -->
     <link rel="stylesheet" th:href="@{/style.css}">
 
-    <!-- Hide hero login button when on login page -->
+    <!-- Hide hero login/register button when on login/register page -->
     <style>
-        .login-btn {
+        .login-btn,
+        .register-btn {
             display: none !important;
         }
     </style>
@@ -20,7 +21,12 @@
 
 <!-- Main login form section -->
 <section layout:fragment="content" class="col-md-6 offset-md-3">
-    <h2 class="mb-4 text-center">Login</h2>
+
+    <!-- Success message if redirected from the registration page -->
+    <div th:if="${registrationSuccess}" class="alert alert-success text-center mt-3" th:text="${registrationSuccess}"></div>
+
+    <!-- Logout success message -->
+    <div th:if="${logoutSuccess}" class="alert alert-info text-center mt-3" th:text="${logoutSuccess}"></div>
 
     <!-- POST form submits credentials to /login -->
     <form th:action="@{/login}" method="post" class="mb-3">

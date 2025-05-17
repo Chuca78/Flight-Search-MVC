@@ -69,8 +69,12 @@ public class FlightController {
             // Add results to model for rendering
             model.addAttribute("flightResults", results);
         } catch (Exception e) {
-            // Display error message if search fails
-            model.addAttribute("error", "Unable to fetch flight data: " + e.getMessage());
+            String errorMessage = e.getMessage();
+            if (errorMessage != null && errorMessage.contains("INVALID DATE")) {
+                model.addAttribute("error", "Departure date must be in the future. Please select a valid travel date.");
+            } else {
+                model.addAttribute("error", "Unable to fetch flight data. Please check your input or try again later.");
+            }
         }
 
         return "search";

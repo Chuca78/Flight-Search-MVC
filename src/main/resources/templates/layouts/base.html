@@ -32,8 +32,9 @@
             </div>
 
             <!-- Shown if user is NOT logged in -->
-            <div th:if="${session.username == null}">
+            <div th:if="${session.username == null}" class="d-flex justify-content-center gap-2 mt-3">
                 <a th:href="@{/login}" class="btn btn-primary login-btn">Login</a>
+                <a th:href="@{/register}" class="btn btn-primary register-btn">Register</a>
             </div>
         </div>
     </div>

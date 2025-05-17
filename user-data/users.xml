@@ -24,4 +24,32 @@
         <username>tim</username>
         <password>Password</password>
     </user>
+    <user>
+        <username>tim2</username>
+        <password>Password</password>
+    </user>
+    <user>
+        <username>tim3</username>
+        <password>Password</password>
+    </user>
+    <user>
+        <username>tim4</username>
+        <password>Password</password>
+    </user>
+    <user>
+        <username>tim5</username>
+        <password>Password</password>
+    </user>
+    <user>
+        <username>tim6</username>
+        <password>Password</password>
+    </user>
+    <user>
+        <username>but</username>
+        <password>ass</password>
+    </user>
+    <user>
+        <username>johnr</username>
+        <password>1928</password>
+    </user>
 </users>
