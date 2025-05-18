@@ -58,15 +58,15 @@ public class BookingController {
 
         if (username == null) {
             // Save booking details to session
-                    session.setAttribute("bookingIntent", Map.of(
-                            "airline", airline,
-                            "origin", origin,
-                            "destination", destination,
-                            "departureTime", departureTime,
-                            "arrivalTime", arrivalTime,
-                            "price", price
-                    ));
-                    return "redirect:/login";
+            session.setAttribute("bookingIntent", Map.of(
+                "airline", airline,
+                "origin", origin,
+                "destination", destination,
+                "departureTime", departureTime,
+                "arrivalTime", arrivalTime,
+                "price", price
+            ));
+            return "redirect:/login";
         }
 
         // Build Booking entity from form data
@@ -94,5 +94,16 @@ public class BookingController {
 
         // Return the confirmation page
         return "confirmation";
+    }
+
+    @GetMapping("/my-bookings")
+    public String showBookings(HttpSession session, Model model) {
+        String username = (String) session.getAttribute("username");
+        if (username == null) {
+            return "redirect:/login";
+        }
+
+        model.addAttribute("bookings", bookingRepository.findByUsername(username));
+        return "my-bookings";
     }
 }

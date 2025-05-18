@@ -134,6 +134,7 @@ input:focus {
    Buttons
 --------------------------- */
 .btn-primary,
+.btn-secondary
 .submit-btn {
   width: 100%;
   background-color: var(--primary-color);

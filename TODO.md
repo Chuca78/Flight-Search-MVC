@@ -45,6 +45,7 @@ Completed:
 - [x] Structure exception handling and error messages in REST and MVC controllers
 - [x] Verify that the app runs cleanly with no runtime or test errors
 - [x] Final polish for UI clarity and responsiveness (if needed)
+- [x] Create my booking view so user can see what they have booked 
 
 ---
 
@@ -54,8 +55,6 @@ Completed:
 - [ ] Update error messages to be more meaningful (Unable to fetch flight data. Please check your input or try again later.)
         This message is present when user inputs city name instead of airport code, user doesn't know why there is an error
 - [ ] Consider changing location of calendar and passenger counter (One user didn't see the controls)
-- [ ] Fix date/tine output - it comes directly from API in a format that is hard to read
-- [ ] Fix airline output for search results (output as airline code which is not meaningful to users)
 - [ ] Consider making the whole result card clickable instead of just the book now button
 - [ ] Consider card spacing (Too much white space?)
 - [ ] Consider updating logic to include search by city as well as airport code
@@ -65,6 +64,8 @@ Completed:
 
 ## Final Submission: Clean-Up and Packaging
 TODO (Mandatory):
+- [ ] Fix date/tine output - it comes directly from API in a format that is hard to read
+- [ ] Fix airline output for search results (output as airline code which is not meaningful to users)
 - [ ] Clean up project files, remove unused assets
 - [ ] Review and polish all UI and templates for visual consistency and usability
 - [ ] Add optional JavaScript validation for:
