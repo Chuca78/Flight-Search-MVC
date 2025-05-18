@@ -7,7 +7,13 @@ import org.junit.jupiter.api.Test;
 import org.springframework.ui.Model;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.contains;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Unit tests for the {@link LoginController}.
@@ -66,8 +72,8 @@ public class LoginControllerTest {
 
         String view = loginController.handleRegister("newuser", "newpass", model, session);
 
-        verify(session).setAttribute("username", "newuser");
-        assertEquals("redirect:/", view);
+        verify(session).setAttribute(eq("registrationSuccess"), contains("Registration successful"));
+        assertEquals("redirect:/login", view);
     }
 
     /**
@@ -91,6 +97,27 @@ public class LoginControllerTest {
         String view = loginController.handleLogout(session);
 
         verify(session).invalidate();
-        assertEquals("redirect:/login", view);
+        assertEquals("redirect:/login?logoutSuccess=true", view);
+    }
+    @Test
+    void loginSuccess_withFlightSessionData_restoresAttributes() {
+        when(userService.validateUser("user", "pass")).thenReturn(true);
+
+        Map<String, Object> bookingIntent = new HashMap<>();
+        bookingIntent.put("airline", "UA");
+        bookingIntent.put("origin", "JFK");
+        bookingIntent.put("destination", "LAX");
+        bookingIntent.put("departureTime", "08:00");
+        bookingIntent.put("arrivalTime", "11:00");
+        bookingIntent.put("price", 299.99);
+
+        when(session.getAttribute("bookingIntent")).thenReturn(bookingIntent);
+
+        String view = loginController.handleLogin("user", "pass", model, session);
+
+        verify(session).setAttribute("username", "user");
+        verify(session).getAttribute("bookingIntent");
+        verify(session).removeAttribute("bookingIntent");
+        assertEquals("confirmation", view);
     }
 }

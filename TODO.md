@@ -39,18 +39,34 @@ Completed:
 
 ## Milestone Three: Security, Validation, and Final Enhancements
 - [x] Perform full form validation using Jakarta Validation API
+- [x] Add additional unit tests to cover added controllers
+- [x] Give user meaningful errors (eg. when searching past travel dates)
 - [x] Handle invalid inputs with UI error messaging
 - [x] Structure exception handling and error messages in REST and MVC controllers
 - [x] Verify that the app runs cleanly with no runtime or test errors
 - [x] Final polish for UI clarity and responsiveness (if needed)
-- [x] Add additional unit tests to  cover added controllers
 
 ---
 
-## Final Submission: Clean-Up and Packaging
-- [ ] Finalize `TODO.md` and ensure rubric alignment
-- [ ] Update `README.md` with any last changes or improvements
+## USER TESTING FEEDBACK (Consider implementing fixes):
+- [ ] Double check pricing (seems too cheap, could be an API translation problem)
+- [ ] Ensure the ticket price multiplies by the number of passengers
+- [ ] Update error messages to be more meaningful (Unable to fetch flight data. Please check your input or try again later.)
+        This message is present when user inputs city name instead of airport code, user doesn't know why there is an error
+- [ ] Consider changing location of calendar and passenger counter (One user didn't see the controls)
+- [ ] Fix date/tine output - it comes directly from API in a format that is hard to read
+- [ ] Fix airline output for search results (output as airline code which is not meaningful to users)
+- [ ] Consider making the whole result card clickable instead of just the book now button
+- [ ] Consider card spacing (Too much white space?)
 - [ ] Consider updating logic to include search by city as well as airport code
+- [ ] If not implementing city name support, clarify placeholder/help text (e.g., "Enter 3-letter airport code")
+- [ ] Allow user to print or download booking information
+- [ ] Review logic for results (why five? what is the order? is there a better way to output?)
+
+## Final Submission: Clean-Up and Packaging
+TODO (Mandatory):
+- [ ] Clean up project files, remove unused assets
+- [ ] Review and polish all UI and templates for visual consistency and usability
 - [ ] Add optional JavaScript validation for:
   - [ ] Disallowing past travel dates on the client side
   - [ ] Preventing empty form submissions (redundant with backend, but improves UX)
@@ -58,13 +74,6 @@ Completed:
   - [ ] Web form (`/`)
   - [ ] REST API (`/api/search`)
   - [ ] Auth API (`/api/auth/login`, `/api/auth/register`)
-- [ ] Clean up project files, remove unused assets
-- [ ] Create `.zip` archive with:
-  - Java source files
-  - HTML/Thymeleaf templates
-  - `application.properties`
-  - `README.md` and `TODO.md`
-  - Any test data or test files required for evaluation
-- [ ] Review and polish all UI and templates for visual consistency and usability
+- [ ] Update `README.md` with any last changes or improvements
 
 ---

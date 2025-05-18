@@ -7,7 +7,12 @@ import org.junit.jupiter.api.Test;
 import org.springframework.ui.Model;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.argThat;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
+
+import java.util.Map;
 
 /**
  * Unit tests for the {@link BookingController}.
@@ -60,5 +65,27 @@ public class BookingControllerTest {
 
         verify(bookingRepository, times(1)).save(any()); // Verify save was triggered
         assertEquals("confirmation", result);            // Confirmation view should be returned
+    }
+   @Test
+    void unauthenticatedBooking_setsIntentAndRedirects() {
+        when(session.getAttribute("username")).thenReturn(null);
+
+        String result = bookingController.handleBooking(
+                "UA", "JFK", "LAX", "08:00", "11:00", 299.99, session, model
+        );
+
+        // Expect booking intent to be captured in session
+        verify(session).setAttribute(eq("bookingIntent"), argThat(intent -> {
+            @SuppressWarnings("unchecked")
+            Map<String, Object> map = (Map<String, Object>) intent;
+            return "UA".equals(map.get("airline")) &&
+                "JFK".equals(map.get("origin")) &&
+                "LAX".equals(map.get("destination")) &&
+                "08:00".equals(map.get("departureTime")) &&
+                "11:00".equals(map.get("arrivalTime")) &&
+                Double.valueOf(299.99).equals(map.get("price"));
+        }));
+
+        assertEquals("redirect:/login", result);
     }
 }

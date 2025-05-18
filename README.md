@@ -145,7 +145,6 @@ This Spring Boot web application allows users to search and book flights by ente
 + **Session-Based Login Only:** The application uses basic session-based login validated against an XML file. It does not include Spring Security, token-based auth, or role-based access control.
 - **No Booking History View:** Although flight bookings are saved to an H2 database, users currently have no way to view or manage their past bookings in the UI.
  - **No Front-End Date Validation:** The flight date input can be set to a past date. This is validated server-side but not blocked by the UI.
- - **No Front-End Date Validation:** The flight date input can be set to a past date. This is validated server-side but not blocked by the UI.
 
 ---
 
