@@ -2,6 +2,9 @@ package com.example.flightsearchmvc.controller;
 
 import com.example.flightsearchmvc.service.UserService;
 import jakarta.servlet.http.HttpSession;
+
+import java.util.Map;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -67,7 +70,28 @@ public class LoginController {
         if (valid) {
             // Store username in session on success
             session.setAttribute("username", username);
+
+        // Check if user had a pending booking
+            Object intent = session.getAttribute("bookingIntent");
+
+            if (intent instanceof Map<?, ?> bookingData) {
+                session.removeAttribute("bookingIntent");
+
+                // Add attributes to the model for confirmation page
+                model.addAttribute("username", username);
+                model.addAttribute("airline", bookingData.get("airline"));
+                model.addAttribute("origin", bookingData.get("origin"));
+                model.addAttribute("destination", bookingData.get("destination"));
+                model.addAttribute("departureTime", bookingData.get("departureTime"));
+                model.addAttribute("arrivalTime", bookingData.get("arrivalTime"));
+                model.addAttribute("price", bookingData.get("price"));
+
+                return "confirmation"; // You could also redirect to a new controller for booking creation
+            }
+
+            // No booking in progress — go to main page
             return "redirect:/";
+
         } else {
             // Return to login with error message
             model.addAttribute("error", "Invalid username or password.");

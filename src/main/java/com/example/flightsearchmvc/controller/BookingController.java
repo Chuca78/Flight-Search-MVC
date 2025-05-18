@@ -8,6 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.util.Map;
 
 /**
  * Controller responsible for handling flight bookings.
@@ -56,8 +57,16 @@ public class BookingController {
         String username = (String) session.getAttribute("username");
 
         if (username == null) {
-            // Redirect to login if no session user found
-            return "redirect:/login";
+            // Save booking details to session
+                    session.setAttribute("bookingIntent", Map.of(
+                            "airline", airline,
+                            "origin", origin,
+                            "destination", destination,
+                            "departureTime", departureTime,
+                            "arrivalTime", arrivalTime,
+                            "price", price
+                    ));
+                    return "redirect:/login";
         }
 
         // Build Booking entity from form data

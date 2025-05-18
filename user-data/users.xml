@@ -12,4 +12,8 @@
         <username>junit_user_1747447256640</username>
         <password>testpass</password>
     </user>
+    <user>
+        <username>tim</username>
+        <password>Password</password>
+    </user>
 </users>

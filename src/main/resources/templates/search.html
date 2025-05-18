@@ -63,7 +63,7 @@
                         </p>
 
                         <!-- Book Flight Button -->
-                        <form th:if="${session.username != null}" th:action="@{/book}" method="post">
+                        <form th:action="@{/book}" method="post">
                             <input type="hidden" name="airline" th:value="${flight.airline}" />
                             <input type="hidden" name="origin" th:value="${flight.origin}" />
                             <input type="hidden" name="destination" th:value="${flight.destination}" />
