@@ -4,10 +4,11 @@
       layout:decorate="~{layouts/base}">
 <head>
     <title>My Bookings</title>
+
     <!-- Link to custom stylesheet -->
     <link rel="stylesheet" th:href="@{/style.css}">
 
-    <!-- Hide hero login/register button when on login/register page -->
+    <!-- Hide login/register button when on login/register page -->
     <style>
         .my-bookings-btn {
             display: none !important;
@@ -16,10 +17,12 @@
 </head>
 <body>
 
+<!-- Booking section heading -->
 <section layout:fragment="content" class="container">
 
     <h2 class="mb-4 text-center">My Bookings</h2>
 
+    <!-- Booking Cards (if bookings exist) -->
     <div th:if="${bookings != null and !bookings.isEmpty()}">
         <div class="row">
             <div class="col-md-6" th:each="booking : ${bookings}">
@@ -40,6 +43,7 @@
         </div>
     </div>
 
+    <!-- Empty State: No Bookings Found -->
     <div th:if="${bookings == null or bookings.isEmpty()}" class="alert alert-info text-center">
         You have no bookings.
     </div>

@@ -14,13 +14,28 @@ public class Booking {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private String username;
+
+    @Column(nullable = false)
     private String airline;
+
+    @Column(nullable = false)
     private String origin;
+
+    @Column(nullable = false)
     private String destination;
+
+    @Column(nullable = false)
     private LocalDate date;
+
+    @Column(nullable = false)
     private String departureTime;
+
+    @Column(nullable = false)
     private String arrivalTime;
+
+    @Column(nullable = false)
     private double price;
 
     /**

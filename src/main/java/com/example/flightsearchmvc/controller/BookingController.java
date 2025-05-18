@@ -96,6 +96,14 @@ public class BookingController {
         return "confirmation";
     }
 
+    /**
+     * Displays a list of all bookings for the currently logged-in user.
+     * If no user is logged in, redirects to the login page.
+     *
+     * @param session the current HTTP session containing the logged-in user
+     * @param model   the model used to pass booking data to the view
+     * @return the "my-bookings" view if user is authenticated, otherwise redirect to login
+     */
     @GetMapping("/my-bookings")
     public String showBookings(HttpSession session, Model model) {
         String username = (String) session.getAttribute("username");

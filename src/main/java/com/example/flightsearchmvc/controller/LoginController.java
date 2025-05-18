@@ -29,8 +29,12 @@ public class LoginController {
     }
 
     /**
-     * Displays the login form.
+     * Displays the login form and optionally shows messages if redirected
+     * after successful registration or logout.
      *
+     * @param logoutSuccess optional query parameter to trigger a logout message
+     * @param session       HTTP session to retrieve success messages
+     * @param model         model used to pass attributes to the view
      * @return the login view
      */
     @GetMapping("/login")
@@ -50,14 +54,19 @@ public class LoginController {
         }
 
     /**
-     * Handles login form submission and stores user in session.
+     * Handles login form submission, validates credentials, stores username
+     * in session, and checks for any in-progress flight booking.
+     *
+     * If a booking intent is found in the session, the user is redirected to
+     * the confirmation view with booking details.
      *
      * @param username the entered username
      * @param password the entered password
      * @param model    the Spring model
      * @param session  the HTTP session
-     * @return redirect to home if valid, or redisplay login on error
+     * @return confirmation view if booking in progress, home otherwise
      */
+
     @PostMapping("/login")
     public String handleLogin(@RequestParam String username,
                               @RequestParam String password,

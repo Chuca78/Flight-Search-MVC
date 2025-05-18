@@ -38,6 +38,7 @@ public class FlightSearchService {
      *
      * @param request Flight search request containing origin, destination, and date
      * @return A list of flight results, parsed from Amadeus API response
+     * @throws RuntimeException if response parsing fails
      */
     public List<FlightResult> searchWithAmadeus(FlightSearchRequest request) {
         String token = getAccessToken();  // Get a valid bearer token for authorization
@@ -84,12 +85,12 @@ public class FlightSearchService {
 
                     // Create a result object for each offer and add to list
                     results.add(new FlightResult(
-                            airline,
-                            request.getOrigin(),
-                            request.getDestination(),
-                            depTime,
-                            arrTime,
-                            price
+                        airline,
+                        request.getOrigin(),
+                        request.getDestination(),
+                        depTime,
+                        arrTime,
+                        price
                     ));
                 }
             } catch (Exception e) {
@@ -107,18 +108,18 @@ public class FlightSearchService {
      */
     public List<FlightResult> searchFlights(FlightSearchRequest request) {
         return List.of(new FlightResult(
-                "Fallback Airlines",
-                request.getOrigin(),
-                request.getDestination(),
-                "10:00",
-                "13:00",
-                299.99));
+        "Fallback Airlines",
+        request.getOrigin(),
+        request.getDestination(),
+        "10:00",
+        "13:00",
+        299.99));
     }
 
     /**
      * Retrieves a bearer token from the Amadeus OAuth2 endpoint.
      *
-     * @return Bearer token as a String
+     * @return A valid OAuth2 access token as a String
      */
     public String getAccessToken() {
         HttpHeaders headers = new HttpHeaders();
@@ -133,10 +134,10 @@ public class FlightSearchService {
 
         // POST request to obtain access token
         ResponseEntity<Map<String, Object>> response = restTemplate.exchange(
-                amadeusProperties.getTokenUrl(),
-                HttpMethod.POST,
-                request,
-                new ParameterizedTypeReference<>() {}
+            amadeusProperties.getTokenUrl(),
+            HttpMethod.POST,
+            request,
+            new ParameterizedTypeReference<>() {}
         );
 
         // Extract and return token from response

@@ -10,7 +10,8 @@ import java.util.List;
 
 /**
  * REST controller that exposes a flight search API for programmatic access.
- * This controller handles JSON-based requests and returns flight results in JSON format.
+ * Accepts HTTP POST requests with flight search criteria and returns results in JSON format.
+ * This endpoint is useful for integrating with external systems or clients.
  */
 @RestController
 @RequestMapping("/api")
@@ -28,12 +29,12 @@ public class RestFlightController {
     }
 
     /**
-     * POST endpoint that accepts a flight search request and returns matching results.
-     * The search source can be set to "amadeus" or fallback to local data.
+     * Handles POST requests to search for flights based on user input.
+     * Accepts either Amadeus API or local dummy data as a source.
      *
-     * @param request The search criteria submitted by the user
-     * @param source  Optional source flag ("amadeus" or "local")
-     * @return JSON response with list of matching flights or error message
+     * @param request Flight search criteria including origin, destination, date, and passengers
+     * @param source  Optional source flag: "amadeus" for live data or "local" for fallback
+     * @return 200 OK with flight results, or 500 Internal Server Error with an error message
      */
     @PostMapping("/search")
     public ResponseEntity<?> searchFlights(
