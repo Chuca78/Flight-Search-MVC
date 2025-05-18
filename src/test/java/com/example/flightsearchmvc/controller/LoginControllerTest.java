@@ -1,48 +1,44 @@
 package com.example.flightsearchmvc.controller;
 
+import com.example.flightsearchmvc.model.Booking;
+import com.example.flightsearchmvc.repository.BookingRepository;
 import com.example.flightsearchmvc.service.UserService;
 import jakarta.servlet.http.HttpSession;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.ui.Model;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.contains;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.*;
-
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.*;
+
 /**
  * Unit tests for the {@link LoginController}.
- * Verifies login and registration behaviors for different session and service outcomes.
+ * Verifies login, logout, registration, and booking confirmation behavior.
  */
 public class LoginControllerTest {
 
     private UserService userService;
+    private BookingRepository bookingRepository;
     private LoginController loginController;
     private HttpSession session;
     private Model model;
 
-    /**
-     * Initializes mock dependencies before each test.
-     */
     @BeforeEach
     void setUp() {
         userService = mock(UserService.class);
-        loginController = new LoginController(userService);
+        bookingRepository = mock(BookingRepository.class);
+        loginController = new LoginController(userService, bookingRepository);
         session = mock(HttpSession.class);
         model = mock(Model.class);
     }
 
-    /**
-     * Tests successful login with valid credentials.
-     */
     @Test
-    void loginSuccess_redirectsToHome() {
+    void loginSuccess_withoutBooking_redirectsToHome() {
         when(userService.validateUser("user", "pass")).thenReturn(true);
+        when(session.getAttribute("bookingIntent")).thenReturn(null);
 
         String view = loginController.handleLogin("user", "pass", model, session);
 
@@ -50,57 +46,8 @@ public class LoginControllerTest {
         assertEquals("redirect:/", view);
     }
 
-    /**
-     * Tests login failure when credentials are invalid.
-     */
     @Test
-    void loginFailure_returnsLoginWithError() {
-        when(userService.validateUser("user", "wrong")).thenReturn(false);
-
-        String view = loginController.handleLogin("user", "wrong", model, session);
-
-        verify(model).addAttribute(eq("error"), any());
-        assertEquals("login", view);
-    }
-
-    /**
-     * Tests successful registration and redirect to home.
-     */
-    @Test
-    void registerSuccess_redirectsToHome() {
-        when(userService.addUser("newuser", "newpass")).thenReturn(true);
-
-        String view = loginController.handleRegister("newuser", "newpass", model, session);
-
-        verify(session).setAttribute(eq("registrationSuccess"), contains("Registration successful"));
-        assertEquals("redirect:/login", view);
-    }
-
-    /**
-     * Tests registration failure when username already exists.
-     */
-    @Test
-    void registerFailure_returnsRegisterWithError() {
-        when(userService.addUser("existing", "pass")).thenReturn(false);
-
-        String view = loginController.handleRegister("existing", "pass", model, session);
-
-        verify(model).addAttribute(eq("error"), any());
-        assertEquals("register", view);
-    }
-
-    /**
-     * Tests logout by ensuring session is invalidated and redirected to login.
-     */
-    @Test
-    void logout_invalidatesSessionAndRedirects() {
-        String view = loginController.handleLogout(session);
-
-        verify(session).invalidate();
-        assertEquals("redirect:/login?logoutSuccess=true", view);
-    }
-    @Test
-    void loginSuccess_withFlightSessionData_restoresAttributes() {
+    void loginSuccess_withBooking_storesBookingAndShowsConfirmation() {
         when(userService.validateUser("user", "pass")).thenReturn(true);
 
         Map<String, Object> bookingIntent = new HashMap<>();
@@ -116,8 +63,54 @@ public class LoginControllerTest {
         String view = loginController.handleLogin("user", "pass", model, session);
 
         verify(session).setAttribute("username", "user");
-        verify(session).getAttribute("bookingIntent");
         verify(session).removeAttribute("bookingIntent");
+        verify(bookingRepository).save(any(Booking.class));
+        verify(model).addAttribute(eq("username"), eq("user"));
+        verify(model).addAttribute(eq("airline"), eq("UA"));
+        verify(model).addAttribute(eq("origin"), eq("JFK"));
+        verify(model).addAttribute(eq("destination"), eq("LAX"));
+        verify(model).addAttribute(eq("departureTime"), eq("08:00"));
+        verify(model).addAttribute(eq("arrivalTime"), eq("11:00"));
+        verify(model).addAttribute(eq("price"), eq(299.99));
+
         assertEquals("confirmation", view);
+    }
+
+    @Test
+    void loginFailure_returnsLoginWithError() {
+        when(userService.validateUser("user", "wrong")).thenReturn(false);
+
+        String view = loginController.handleLogin("user", "wrong", model, session);
+
+        verify(model).addAttribute(eq("error"), any());
+        assertEquals("login", view);
+    }
+
+    @Test
+    void registerSuccess_redirectsToLogin() {
+        when(userService.addUser("newuser", "newpass")).thenReturn(true);
+
+        String view = loginController.handleRegister("newuser", "newpass", model, session);
+
+        verify(session).setAttribute(eq("registrationSuccess"), contains("Registration successful"));
+        assertEquals("redirect:/login", view);
+    }
+
+    @Test
+    void registerFailure_returnsRegisterWithError() {
+        when(userService.addUser("existing", "pass")).thenReturn(false);
+
+        String view = loginController.handleRegister("existing", "pass", model, session);
+
+        verify(model).addAttribute(eq("error"), any());
+        assertEquals("register", view);
+    }
+
+    @Test
+    void logout_invalidatesSessionAndRedirects() {
+        String view = loginController.handleLogout(session);
+
+        verify(session).invalidate();
+        assertEquals("redirect:/login?logoutSuccess=true", view);
     }
 }

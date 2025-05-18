@@ -1,8 +1,11 @@
 package com.example.flightsearchmvc.controller;
 
+import com.example.flightsearchmvc.model.Booking;
 import com.example.flightsearchmvc.service.UserService;
+import com.example.flightsearchmvc.repository.BookingRepository;
 import jakarta.servlet.http.HttpSession;
 
+import java.time.LocalDate;
 import java.util.Map;
 
 import org.springframework.stereotype.Controller;
@@ -18,14 +21,17 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class LoginController {
 
     private final UserService userService;
+    private final BookingRepository bookingRepository;
 
     /**
-     * Constructor-based dependency injection for UserService.
+     * Constructor-based dependency injection for UserService and BookingRepository.
      *
-     * @param userService the user service to handle login/registration logic
+     * @param userService        the user service to handle login/registration logic
+     * @param bookingRepository  the booking repository to persist pending bookings
      */
-    public LoginController(UserService userService) {
+    public LoginController(UserService userService, BookingRepository bookingRepository) {
         this.userService = userService;
+        this.bookingRepository = bookingRepository;
     }
 
     /**
@@ -39,8 +45,8 @@ public class LoginController {
      */
     @GetMapping("/login")
     public String showLoginForm(@RequestParam(value = "logoutSuccess", required = false) String logoutSuccess,
-                            HttpSession session,
-                            Model model) {
+                                HttpSession session,
+                                Model model) {
         // Check if there's a success message from registration
         Object registrationSuccess = session.getAttribute("registrationSuccess");
         if (registrationSuccess != null) {
@@ -50,8 +56,8 @@ public class LoginController {
         if ("true".equals(logoutSuccess)) {
             model.addAttribute("logoutSuccess", "You have been logged out successfully.");
         }
-            return "login";
-        }
+        return "login";
+    }
 
     /**
      * Handles login form submission, validates credentials, stores username
@@ -66,7 +72,6 @@ public class LoginController {
      * @param session  the HTTP session
      * @return confirmation view if booking in progress, home otherwise
      */
-
     @PostMapping("/login")
     public String handleLogin(@RequestParam String username,
                               @RequestParam String password,
@@ -80,22 +85,35 @@ public class LoginController {
             // Store username in session on success
             session.setAttribute("username", username);
 
-        // Check if user had a pending booking
+            // Check if user had a pending booking
             Object intent = session.getAttribute("bookingIntent");
 
             if (intent instanceof Map<?, ?> bookingData) {
                 session.removeAttribute("bookingIntent");
 
+                // Persist the booking to the database
+                Booking booking = new Booking();
+                booking.setUsername(username);
+                booking.setAirline((String) bookingData.get("airline"));
+                booking.setOrigin((String) bookingData.get("origin"));
+                booking.setDestination((String) bookingData.get("destination"));
+                booking.setDepartureTime((String) bookingData.get("departureTime"));
+                booking.setArrivalTime((String) bookingData.get("arrivalTime"));
+                booking.setPrice((Double) bookingData.get("price"));
+                booking.setDate(LocalDate.now());
+
+                bookingRepository.save(booking);
+
                 // Add attributes to the model for confirmation page
                 model.addAttribute("username", username);
-                model.addAttribute("airline", bookingData.get("airline"));
-                model.addAttribute("origin", bookingData.get("origin"));
-                model.addAttribute("destination", bookingData.get("destination"));
-                model.addAttribute("departureTime", bookingData.get("departureTime"));
-                model.addAttribute("arrivalTime", bookingData.get("arrivalTime"));
-                model.addAttribute("price", bookingData.get("price"));
+                model.addAttribute("airline", booking.getAirline());
+                model.addAttribute("origin", booking.getOrigin());
+                model.addAttribute("destination", booking.getDestination());
+                model.addAttribute("departureTime", booking.getDepartureTime());
+                model.addAttribute("arrivalTime", booking.getArrivalTime());
+                model.addAttribute("price", booking.getPrice());
 
-                return "confirmation"; // You could also redirect to a new controller for booking creation
+                return "confirmation";
             }
 
             // No booking in progress — go to main page
