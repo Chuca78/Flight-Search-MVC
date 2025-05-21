@@ -62,12 +62,11 @@ public class FlightController {
             return "search";
         }
 
-        try {
-            // Perform flight search using Amadeus API
+       try {
             List<FlightResult> results = flightSearchService.searchWithAmadeus(request);
-
-            // Add results to model for rendering
             model.addAttribute("flightResults", results);
+        } catch (IllegalArgumentException iae) {
+            model.addAttribute("error", iae.getMessage()); // Show user-friendly input error
         } catch (Exception e) {
             String errorMessage = e.getMessage();
             if (errorMessage != null && errorMessage.contains("INVALID DATE")) {
@@ -76,7 +75,6 @@ public class FlightController {
                 model.addAttribute("error", "Unable to fetch flight data. Please check your input or try again later.");
             }
         }
-
-        return "search";
+            return "search";
     }
 }

@@ -7,6 +7,7 @@
     <title>Search Flights</title>
     <link rel="stylesheet" th:href="@{/style.css}">
     <style>
+        /* Hide the search nav button on this page */
         .search-btn {
             display: none !important;
         }
@@ -14,6 +15,7 @@
 </head>
 <body>
 <section layout:fragment="content">
+    <!-- Welcome message for logged-in users -->
     <div th:if="${session.username != null}" class="text-center mb-3">
         <small class="text-muted">
             Welcome, <strong th:text="${session.username}">User</strong>! You are logged in. You can now search and book flights.
@@ -22,14 +24,15 @@
 
     <h2 class="mb-4 text-center">Search for Flights</h2>
 
+    <!-- Flight Search Form -->
     <form th:action="@{/search(source='amadeus')}" method="post" th:object="${flightSearchRequest}" class="row g-3">
         <div class="col-md-6">
             <label class="form-label">Origin</label>
-            <input type="text" th:field="*{origin}" class="form-control" placeholder="e.g., JFK" required>
+            <input type="text" th:field="*{origin}" class="form-control" placeholder="Enter a valid 3-letter airport code (e.g., JFK, LAX)" required>
         </div>
         <div class="col-md-6">
             <label class="form-label">Destination</label>
-            <input type="text" th:field="*{destination}" class="form-control" placeholder="e.g., LAX" required>
+            <input type="text" th:field="*{destination}" class="form-control" placeholder="Enter a valid 3-letter airport code (e.g., JFK, LAX)" required>
         </div>
         <div class="col-md-6">
             <label class="form-label">Date</label>
@@ -44,15 +47,20 @@
         </div>
     </form>
 
+    <!-- Error message block -->
     <div th:if="${error}" class="alert alert-danger mt-4 text-center" th:text="${error}"></div>
 
+    <!-- Flight Search Results -->
     <div th:if="${flightResults}" class="mt-5">
         <h3 class="mb-4">Search Results</h3>
         <div class="row">
             <div class="col-md-6" th:each="flight : ${flightResults}">
                 <div class="card mb-3 shadow-sm">
                     <div class="card-body">
+                        <!-- Airline name -->
                         <h5 class="card-title" th:text="${flight.formattedAirline}">Airline</h5>
+
+                        <!-- Flight details -->
                         <p class="card-text">
                             <strong>From:</strong> <span th:text="${flight.formattedOrigin}"></span> →
                             <strong>To:</strong> <span th:text="${flight.formattedDestination}"></span><br>
@@ -60,9 +68,11 @@
                             <strong>Arr:</strong> <span th:text="${flight.formattedArrivalTime}"></span><br>
                             <strong>Price:</strong> $<span th:text="${flight.price}"></span><br>
                             <strong>Passengers:</strong> <span th:text="${flightSearchRequest.passengers}"></span><br>
-                            <strong>Total Price:</strong> $<span th:text="${#numbers.formatDecimal(flight.price * flightSearchRequest.passengers, 1, 'COMMA', 2, 'POINT')}"></span><br>
+                            <strong>Total Price:</strong> $
+                            <span th:text="${#numbers.formatDecimal(flight.price * flightSearchRequest.passengers, 1, 'COMMA', 2, 'POINT')}"></span><br>
                         </p>
 
+                        <!-- Booking form -->
                         <form th:action="@{/book}" method="post">
                             <input type="hidden" name="airline" th:value="${flight.formattedAirline}" />
                             <input type="hidden" name="origin" th:value="${flight.origin}" />
@@ -74,6 +84,7 @@
                             <button type="submit" class="btn btn-success btn-sm mt-2">Book Flight</button>
                         </form>
 
+                        <!-- Prompt if not logged in -->
                         <div th:if="${session.username == null}" class="text-muted small mt-2">
                             <em>Login to book this flight</em>
                         </div>

@@ -41,6 +41,14 @@ public class FlightSearchService {
      * @throws RuntimeException if response parsing fails
      */
     public List<FlightResult> searchWithAmadeus(FlightSearchRequest request) {
+        String origin = request.getOrigin();
+        String destination = request.getDestination();
+
+        // Validate origin and destination format (must be 3-letter codes)
+        if (!origin.matches("^[A-Z]{3}$") || !destination.matches("^[A-Z]{3}$")) {
+            throw new IllegalArgumentException("Please enter valid 3-letter airport codes (e.g., JFK, LAX).");
+        }
+
         String token = getAccessToken();  // Get a valid bearer token for authorization
 
         // Construct request URL with path parameters
