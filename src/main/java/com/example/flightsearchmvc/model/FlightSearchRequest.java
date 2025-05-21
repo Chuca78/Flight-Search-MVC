@@ -41,7 +41,7 @@ public class FlightSearchRequest {
      * @param origin origin code
      */
     public void setOrigin(String origin) {
-        this.origin = origin;
+        this.origin = origin != null ? origin.toUpperCase() : null;
     }
 
     /**
@@ -57,7 +57,7 @@ public class FlightSearchRequest {
      * @param destination destination code
      */
     public void setDestination(String destination) {
-        this.destination = destination;
+        this.destination = destination != null ? destination.toUpperCase() : null;
     }
 
     /**

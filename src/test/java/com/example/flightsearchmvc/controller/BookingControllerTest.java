@@ -45,7 +45,7 @@ public class BookingControllerTest {
         when(session.getAttribute("username")).thenReturn(null); // Simulate missing login
 
         String result = bookingController.handleBooking(
-                "UA", "JFK", "LAX", "08:00", "11:00", 299.99, session, model
+                "UA", "JFK", "LAX", "08:00", "11:00", 299.99, 2, session, model
         );
 
         assertEquals("redirect:/login", result); // Should redirect unauthenticated user
@@ -60,18 +60,19 @@ public class BookingControllerTest {
         when(session.getAttribute("username")).thenReturn("testuser"); // Simulate authenticated user
 
         String result = bookingController.handleBooking(
-                "UA", "JFK", "LAX", "08:00", "11:00", 299.99, session, model
+                "UA", "JFK", "LAX", "08:00", "11:00", 299.99, 2, session, model
         );
 
         verify(bookingRepository, times(1)).save(any()); // Verify save was triggered
         assertEquals("confirmation", result);            // Confirmation view should be returned
     }
-   @Test
+
+    @Test
     void unauthenticatedBooking_setsIntentAndRedirects() {
         when(session.getAttribute("username")).thenReturn(null);
 
         String result = bookingController.handleBooking(
-                "UA", "JFK", "LAX", "08:00", "11:00", 299.99, session, model
+                "UA", "JFK", "LAX", "08:00", "11:00", 299.99, 2, session, model
         );
 
         // Expect booking intent to be captured in session

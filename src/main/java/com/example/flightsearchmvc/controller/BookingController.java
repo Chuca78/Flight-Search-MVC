@@ -38,6 +38,7 @@ public class BookingController {
      * @param departureTime  Flight departure time
      * @param arrivalTime    Flight arrival time
      * @param price          Flight price
+     * @param passengers     Number of passengers
      * @param session        HTTP session to validate logged-in user
      * @param model          Spring Model to pass data to the view
      * @return               Confirmation page or redirect to login
@@ -50,6 +51,7 @@ public class BookingController {
             @RequestParam String departureTime,
             @RequestParam String arrivalTime,
             @RequestParam double price,
+            @RequestParam int passengers,
             HttpSession session,
             Model model) {
 
@@ -64,7 +66,8 @@ public class BookingController {
                 "destination", destination,
                 "departureTime", departureTime,
                 "arrivalTime", arrivalTime,
-                "price", price
+                "price", price,
+                "passengers", passengers
             ));
             return "redirect:/login";
         }
@@ -77,13 +80,15 @@ public class BookingController {
         booking.setDestination(destination);
         booking.setDepartureTime(departureTime);
         booking.setArrivalTime(arrivalTime);
-        booking.setPrice(price);
+        booking.setPrice(price * passengers);
+        booking.setPassengers(passengers);
         booking.setDate(LocalDate.now());
 
         // Persist the booking to the H2 database
         bookingRepository.save(booking);
 
         // Add attributes to the model for the confirmation view
+        model.addAttribute("booking", booking);  
         model.addAttribute("username", username);
         model.addAttribute("origin", origin);
         model.addAttribute("destination", destination);
@@ -91,6 +96,7 @@ public class BookingController {
         model.addAttribute("formattedDepartureTime", booking.getFormattedDepartureTime());
         model.addAttribute("formattedArrivalTime", booking.getFormattedArrivalTime());
         model.addAttribute("price", price);
+        model.addAttribute("passengers", passengers);
 
         // Return the confirmation page
         return "confirmation";

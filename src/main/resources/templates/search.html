@@ -54,11 +54,13 @@
                     <div class="card-body">
                         <h5 class="card-title" th:text="${flight.formattedAirline}">Airline</h5>
                         <p class="card-text">
-                            <strong>From:</strong> <span th:text="${flight.origin}"></span> →
-                            <strong>To:</strong> <span th:text="${flight.destination}"></span><br>
+                            <strong>From:</strong> <span th:text="${flight.formattedOrigin}"></span> →
+                            <strong>To:</strong> <span th:text="${flight.formattedDestination}"></span><br>
                             <strong>Dep:</strong> <span th:text="${flight.formattedDepartureTime}"></span><br>
                             <strong>Arr:</strong> <span th:text="${flight.formattedArrivalTime}"></span><br>
-                            <strong>Price:</strong> $<span th:text="${flight.price}"></span>
+                            <strong>Price:</strong> $<span th:text="${flight.price}"></span><br>
+                            <strong>Passengers:</strong> <span th:text="${flightSearchRequest.passengers}"></span><br>
+                            <strong>Total Price:</strong> $<span th:text="${#numbers.formatDecimal(flight.price * flightSearchRequest.passengers, 1, 'COMMA', 2, 'POINT')}"></span><br>
                         </p>
 
                         <form th:action="@{/book}" method="post">
@@ -68,6 +70,7 @@
                             <input type="hidden" name="departureTime" th:value="${flight.departureTime}" />
                             <input type="hidden" name="arrivalTime" th:value="${flight.arrivalTime}" />
                             <input type="hidden" name="price" th:value="${flight.price}" />
+                            <input type="hidden" name="passengers" th:value="${flightSearchRequest.passengers}" />
                             <button type="submit" class="btn btn-success btn-sm mt-2">Book Flight</button>
                         </form>
 

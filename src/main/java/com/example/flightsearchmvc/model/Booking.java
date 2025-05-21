@@ -40,6 +40,9 @@ public class Booking {
     @Column(nullable = false)
     private double price;
 
+    @Column(nullable = false)
+    private int passengers;
+
     /**
      * Gets the unique booking ID.
      * @return booking ID
@@ -101,7 +104,7 @@ public class Booking {
      * @param origin origin code
      */
     public void setOrigin(String origin) {
-        this.origin = origin;
+        this.origin = origin != null ? origin.toUpperCase() : null;
     }
 
     /**
@@ -117,7 +120,7 @@ public class Booking {
      * @param destination destination code
      */
     public void setDestination(String destination) {
-        this.destination = destination;
+        this.destination = destination != null ? destination.toUpperCase() : null;
     }
 
     /**
@@ -182,6 +185,22 @@ public class Booking {
      */
     public void setPrice(double price) {
         this.price = price;
+    }
+
+    /**
+     * Gets the number of passengers for this booking.
+     * @return passenger count
+     */
+    public int getPassengers() {
+        return passengers;
+    }
+
+    /**
+     * Sets the number of passengers for this booking.
+     * @param passengers passenger count
+     */
+    public void setPassengers(int passengers) {
+        this.passengers = passengers;
     }
 
     /**
