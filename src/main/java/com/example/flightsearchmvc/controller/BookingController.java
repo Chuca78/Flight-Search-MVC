@@ -85,11 +85,11 @@ public class BookingController {
 
         // Add attributes to the model for the confirmation view
         model.addAttribute("username", username);
-        model.addAttribute("airline", airline);
         model.addAttribute("origin", origin);
         model.addAttribute("destination", destination);
-        model.addAttribute("departureTime", departureTime);
-        model.addAttribute("arrivalTime", arrivalTime);
+        model.addAttribute("formattedAirline", booking.getFormattedAirline());
+        model.addAttribute("formattedDepartureTime", booking.getFormattedDepartureTime());
+        model.addAttribute("formattedArrivalTime", booking.getFormattedArrivalTime());
         model.addAttribute("price", price);
 
         // Return the confirmation page

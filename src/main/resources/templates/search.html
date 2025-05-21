@@ -1,37 +1,27 @@
+
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layouts/base}">
 <head>
     <title>Search Flights</title>
-    
-    <!-- Link to custom stylesheet -->
     <link rel="stylesheet" th:href="@{/style.css}">
-
-    <!-- Hide search button when on search page -->
     <style>
         .search-btn {
             display: none !important;
         }
     </style>
-
 </head>
 <body>
-
-<!-- Main content injected into base layout -->
 <section layout:fragment="content">
-
-    <!-- Welcome message for logged-in users -->
     <div th:if="${session.username != null}" class="text-center mb-3">
         <small class="text-muted">
             Welcome, <strong th:text="${session.username}">User</strong>! You are logged in. You can now search and book flights.
         </small>
     </div>
 
-    <!-- Heading -->
     <h2 class="mb-4 text-center">Search for Flights</h2>
 
-    <!-- Flight Search Form -->
     <form th:action="@{/search(source='amadeus')}" method="post" th:object="${flightSearchRequest}" class="row g-3">
         <div class="col-md-6">
             <label class="form-label">Origin</label>
@@ -54,28 +44,25 @@
         </div>
     </form>
 
-    <!-- Error Message -->
     <div th:if="${error}" class="alert alert-danger mt-4 text-center" th:text="${error}"></div>
 
-    <!-- Search Results -->
     <div th:if="${flightResults}" class="mt-5">
         <h3 class="mb-4">Search Results</h3>
         <div class="row">
             <div class="col-md-6" th:each="flight : ${flightResults}">
                 <div class="card mb-3 shadow-sm">
                     <div class="card-body">
-                        <h5 class="card-title" th:text="${flight.airline}">Airline</h5>
+                        <h5 class="card-title" th:text="${flight.formattedAirline}">Airline</h5>
                         <p class="card-text">
                             <strong>From:</strong> <span th:text="${flight.origin}"></span> →
                             <strong>To:</strong> <span th:text="${flight.destination}"></span><br>
-                            <strong>Dep:</strong> <span th:text="${flight.departureTime}"></span><br>
-                            <strong>Arr:</strong> <span th:text="${flight.arrivalTime}"></span><br>
+                            <strong>Dep:</strong> <span th:text="${flight.formattedDepartureTime}"></span><br>
+                            <strong>Arr:</strong> <span th:text="${flight.formattedArrivalTime}"></span><br>
                             <strong>Price:</strong> $<span th:text="${flight.price}"></span>
                         </p>
 
-                        <!-- Book Flight Button -->
                         <form th:action="@{/book}" method="post">
-                            <input type="hidden" name="airline" th:value="${flight.airline}" />
+                            <input type="hidden" name="airline" th:value="${flight.formattedAirline}" />
                             <input type="hidden" name="origin" th:value="${flight.origin}" />
                             <input type="hidden" name="destination" th:value="${flight.destination}" />
                             <input type="hidden" name="departureTime" th:value="${flight.departureTime}" />
@@ -84,7 +71,6 @@
                             <button type="submit" class="btn btn-success btn-sm mt-2">Book Flight</button>
                         </form>
 
-                        <!-- Prompt to log in if user not logged in -->
                         <div th:if="${session.username == null}" class="text-muted small mt-2">
                             <em>Login to book this flight</em>
                         </div>
@@ -93,7 +79,6 @@
             </div>
         </div>
     </div>
-
 </section>
 </body>
 </html>

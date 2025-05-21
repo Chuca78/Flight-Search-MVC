@@ -28,12 +28,12 @@
             <div class="col-md-6" th:each="booking : ${bookings}">
                 <div class="card mb-3">
                     <div class="card-body">
-                        <h5 class="card-title" th:text="${booking.airline}">Airline</h5>
+                        <span th:text="${T(com.example.flightsearchmvc.util.AirlineUtils).getAirlineName(booking.airline)}"></span>
                         <p class="card-text">
                             <strong>From:</strong> <span th:text="${booking.origin}"></span> →
                             <strong>To:</strong> <span th:text="${booking.destination}"></span><br>
-                            <strong>Departure:</strong> <span th:text="${booking.departureTime}"></span><br>
-                            <strong>Arrival:</strong> <span th:text="${booking.arrivalTime}"></span><br>
+                            <strong>Departure:</strong> <span th:text="${booking.formattedDepartureTime}"></span><br>
+                            <strong>Arrival:</strong> <span th:text="${booking.formattedArrivalTime}"></span><br>
                             <strong>Date:</strong> <span th:text="${booking.date}"></span><br>
                             <strong>Price:</strong> $<span th:text="${booking.price}"></span>
                         </p>

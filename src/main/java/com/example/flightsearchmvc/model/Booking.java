@@ -2,6 +2,8 @@ package com.example.flightsearchmvc.model;
 
 import jakarta.persistence.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 /**
  * Entity class representing a flight booking.
@@ -180,5 +182,44 @@ public class Booking {
      */
     public void setPrice(double price) {
         this.price = price;
+    }
+
+    /**
+     * Gets the full airline name for display based on the airline code.
+     * @return formatted airline name
+     */
+    public String getFormattedAirline() {
+        return com.example.flightsearchmvc.util.AirlineUtils.getAirlineName(airline);
+    }
+
+    /**
+     * Gets the formatted departure time for display.
+     * @return formatted departure time string
+     */
+    public String getFormattedDepartureTime() {
+        return formatDateTime(departureTime);
+    }
+
+    /**
+     * Gets the formatted arrival time for display.
+     * @return formatted arrival time string
+     */
+    public String getFormattedArrivalTime() {
+        return formatDateTime(arrivalTime);
+    }
+
+    /**
+     * Converts an ISO date-time string to a user-friendly format.
+     * @param raw raw ISO 8601 date-time string
+     * @return formatted date-time string, or raw if parsing fails
+     */
+    private String formatDateTime(String raw) {
+        try {
+            LocalDateTime dt = LocalDateTime.parse(raw);
+            DateTimeFormatter fmt = DateTimeFormatter.ofPattern("MMM dd, yyyy – hh:mm a");
+            return dt.format(fmt);
+        } catch (Exception e) {
+            return raw;
+        }
     }
 }

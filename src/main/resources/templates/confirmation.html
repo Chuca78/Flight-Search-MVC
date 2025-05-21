@@ -28,14 +28,14 @@
     <!-- Card displaying booking summary -->
     <div class="card mx-auto my-4 p-3" style="max-width: 500px;">
         <!-- Displays the airline name -->
-        <h5 th:text="${airline}">Airline</h5>
+        <h5 th:text="${formattedAirline}">Airline</h5>
 
         <!-- Flight details: route, time, and price -->
         <p>
             <strong>From:</strong> <span th:text="${origin}"></span> →
             <strong>To:</strong> <span th:text="${destination}"></span><br>
-            <strong>Departure:</strong> <span th:text="${departureTime}"></span><br>
-            <strong>Arrival:</strong> <span th:text="${arrivalTime}"></span><br>
+            <strong>Departure:</strong> <span th:text="${formattedDepartureTime}"></span><br>
+            <strong>Arrival:</strong> <span th:text="${formattedArrivalTime}"></span><br>
             <strong>Price:</strong> $<span th:text="${price}"></span>
         </p>
     </div>
