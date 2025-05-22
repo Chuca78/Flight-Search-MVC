@@ -22,6 +22,15 @@ This Spring Boot web application allows users to search and book flights by ente
   - Session-aware navigation (welcome message, logout button)
   - Hero banner, contrast-friendly theme, Bootstrap 5 layout
   - Clear feedback for errors, success, and login state
+- **Booking History View**
+  - Logged-in users can view all previous bookings on the **My Bookings** page
+  - Clean printable layout with airline name, times, and total price
+- **Enhanced Print Support**
+  - Confirmation and My Bookings pages can be printed cleanly
+  - Layout automatically hides nav, banners, and formats output for single-page printing
+- **Form & Input Validation**
+  - Client-side date validation prevents past dates
+  - Clear error messages for invalid airport codes (e.g., entering “Chicago” instead of “ORD”)
 - **Testing and Quality**
   - JUnit tests for service, model, controller layers
   - Clean, modular code with JavaDoc and inline comments
@@ -136,15 +145,23 @@ This Spring Boot web application allows users to search and book flights by ente
 - Reviewed and documented all major classes with JavaDoc and comments
 - Cleaned up unused files and updated project structure
 
+## Final Polish Summary
+
+- Enabled user-friendly error messages for invalid inputs (e.g., city names, past dates)
+- Created a printable booking confirmation page
+- Added My Bookings page with all previous reservations and print support
+- Performed client-side date restriction and consistent UI validation
+- Conducted full cleanup of unused files and layout
+- Completed testing coverage and documented all code with JavaDoc
+
 ---
 
 ## Known Limitations / Future Enhancements
 
-- **Carrier Code Mapping:** Airline codes returned from the Amadeus API (e.g., “UA”) are not mapped to full airline names like “United Airlines.” Adding a lookup or API integration could improve readability.
-- **Lack of Visual Feedback:** The UI does not currently display a loading indicator or feedback during slow API responses, which may affect user experience.
-+ **Session-Based Login Only:** The application uses basic session-based login validated against an XML file. It does not include Spring Security, token-based auth, or role-based access control.
-- **No Booking History View:** Although flight bookings are saved to an H2 database, users currently have no way to view or manage their past bookings in the UI.
- - **No Front-End Date Validation:** The flight date input can be set to a past date. This is validated server-side but not blocked by the UI.
+- **No Spring Security**: The app uses basic session-based auth via XML file; no token-based login or role-based security is implemented.
+- **No Editable Booking Management**: Bookings cannot yet be canceled, edited, or filtered.
+- **Card Usability**: Only the "Book" button is clickable — card-wide interactivity could improve UX.
+- **No Dynamic Airline Lookup**: Airline codes (e.g., "UA") are mapped manually; a live IATA lookup or external service could improve scalability.
 
 ---
 

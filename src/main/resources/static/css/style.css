@@ -179,6 +179,70 @@ input:focus {
 }
 
 /* ------------------------
+   Print formatting
+--------------------------- */
+/* ------------------------
+   Clean Print Styles
+--------------------------- */
+@media print {
+  /* Hide elements not needed for print */
+  .hero-image,
+  nav,
+  footer,
+  .btn,
+  .alert-info {
+    display: none !important;
+  }
+
+  /* Clean up layout spacing */
+  html, body {
+    margin: 0 !important;
+    padding: 0 !important;
+    background: white !important;
+    height: auto !important;
+    overflow: visible !important;
+  }
+
+  main.container, .container {
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  h2 {
+    font-size: 1.2rem !important;
+    margin-bottom: 0.5rem !important;
+  }
+
+  /* Flatten grid and layout */
+  .row, .col-md-6 {
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  /* Eliminate Bootstrap margin utilities that push height */
+  .mb-3, .mb-4, .mb-5,
+  .mt-3, .mt-4, .mt-5 {
+    margin: 0 !important;
+  }
+
+  /* Prevent page breaks inside content blocks */
+  .card, .print-block {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+    border: none !important;
+    box-shadow: none !important;
+    margin-bottom: 1rem !important;
+  }
+
+  /* Final cleanup: prevent overflow triggers */
+  * {
+    box-shadow: none !important;
+    box-sizing: border-box !important;
+  }
+}
+
+/* ------------------------
    Responsive Enhancements
 --------------------------- */
 @media (min-width: 768px) and (max-width: 1024px) {

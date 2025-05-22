@@ -39,6 +39,10 @@
             <strong>Passengers:</strong> <span th:text="${booking.passengers}"></span><br>
             <strong>Total Price:</strong> $<span th:text="${booking.price}"></span>
         </p>
+
+        <!-- Print button -->
+        <button class="btn btn-secondary mt-3" onclick="window.print()">Print Booking</button>
+
     </div>
 
     <!-- Button to return to the search form -->
