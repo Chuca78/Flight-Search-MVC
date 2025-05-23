@@ -16,7 +16,7 @@ import static org.mockito.Mockito.*;
 
 /**
  * Unit tests for the {@link LoginController}.
- * Verifies login, logout, registration, and booking confirmation behavior.
+ * Covers login, logout, registration, and post-login booking confirmation flow.
  */
 public class LoginControllerTest {
 
@@ -35,6 +35,10 @@ public class LoginControllerTest {
         model = mock(Model.class);
     }
 
+    /**
+     * Tests a successful login without any pending booking intent.
+     * Expects session storage and redirect to home.
+     */
     @Test
     void loginSuccess_withoutBooking_redirectsToHome() {
         when(userService.validateUser("user", "pass")).thenReturn(true);
@@ -46,6 +50,10 @@ public class LoginControllerTest {
         assertEquals("redirect:/", view);
     }
 
+    /**
+     * Tests login success with a pending booking in the session.
+     * Expects booking to be saved, session updated, and confirmation view returned.
+     */
     @Test
     void loginSuccess_withBooking_storesBookingAndShowsConfirmation() {
         when(userService.validateUser("user", "pass")).thenReturn(true);
@@ -76,6 +84,10 @@ public class LoginControllerTest {
         assertEquals("confirmation", view);
     }
 
+    /**
+     * Tests login failure with invalid credentials.
+     * Expects login form to be redisplayed with error message.
+     */
     @Test
     void loginFailure_returnsLoginWithError() {
         when(userService.validateUser("user", "wrong")).thenReturn(false);
@@ -86,6 +98,10 @@ public class LoginControllerTest {
         assertEquals("login", view);
     }
 
+    /**
+     * Tests successful user registration.
+     * Expects session message set and redirect to login page.
+     */
     @Test
     void registerSuccess_redirectsToLogin() {
         when(userService.addUser("newuser", "newpass")).thenReturn(true);
@@ -96,6 +112,10 @@ public class LoginControllerTest {
         assertEquals("redirect:/login", view);
     }
 
+    /**
+     * Tests duplicate registration.
+     * Expects register form to be redisplayed with error.
+     */
     @Test
     void registerFailure_returnsRegisterWithError() {
         when(userService.addUser("existing", "pass")).thenReturn(false);
@@ -106,6 +126,10 @@ public class LoginControllerTest {
         assertEquals("register", view);
     }
 
+    /**
+     * Tests logout behavior.
+     * Expects session to be invalidated and redirect to login with logout message.
+     */
     @Test
     void logout_invalidatesSessionAndRedirects() {
         String view = loginController.handleLogout(session);

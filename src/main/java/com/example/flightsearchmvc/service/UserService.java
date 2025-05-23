@@ -8,20 +8,21 @@ import org.springframework.stereotype.Service;
 import java.io.File;
 
 /**
- * Service to load and manage user authentication and registration via users.xml.
+ * Service for managing user registration and authentication
+ * using a local XML file (users.xml) for persistence.
  */
 @Service
 public class UserService {
 
-    // Writable external path for persistence
+    /** Path to the external XML file storing user credentials. */
     private static final String USER_FILE_PATH = "user-data/users.xml";
 
     /**
-     * Validates login credentials against users.xml.
+     * Validates user login credentials by checking against stored users.
      *
-     * @param username the input username
-     * @param password the input password
-     * @return true if valid credentials, false otherwise
+     * @param username the entered username
+     * @param password the entered password
+     * @return true if the credentials match a user in the file, false otherwise
      */
     public boolean validateUser(String username, String password) {
         Users users = loadUsers();
@@ -31,10 +32,10 @@ public class UserService {
     }
 
     /**
-     * Checks if a username already exists.
+     * Checks whether a username already exists in users.xml.
      *
      * @param username the username to check
-     * @return true if the username exists, false otherwise
+     * @return true if the username is already taken, false otherwise
      */
     public boolean userExists(String username) {
         Users users = loadUsers();
@@ -43,21 +44,20 @@ public class UserService {
     }
 
     /**
-     * Adds a new user to users.xml.
+     * Adds a new user to the XML file if the username is not already taken.
      *
-     * @param username the new user's username
-     * @param password the new user's password
-     * @return true if the user was successfully added; false if the username already exists
+     * @param username desired username
+     * @param password desired password
+     * @return true if the user was successfully added; false if username exists
      */
     public boolean addUser(String username, String password) {
         Users users = loadUsers();
 
-        // Prevent duplicates
         boolean exists = users.getUserList().stream()
                 .anyMatch(user -> user.getUsername().equalsIgnoreCase(username));
 
         if (exists) {
-            return false; // Do not add duplicate
+            return false;
         }
 
         User newUser = new User();
@@ -70,15 +70,15 @@ public class UserService {
     }
 
     /**
-     * Loads users from the external users.xml file using JAXB.
+     * Loads the list of users from the users.xml file using JAXB.
      *
-     * @return a Users object containing a list of User entries
+     * @return Users object containing user list; empty list if file is missing or malformed
      */
     private Users loadUsers() {
         try {
             File xmlFile = new File(USER_FILE_PATH);
             if (!xmlFile.exists()) {
-                return new Users(); // fallback: empty list
+                return new Users(); // Return empty list if file doesn't exist
             }
 
             JAXBContext context = JAXBContext.newInstance(Users.class);
@@ -86,19 +86,19 @@ public class UserService {
             return (Users) unmarshaller.unmarshal(xmlFile);
         } catch (Exception e) {
             e.printStackTrace();
-            return new Users(); // fallback
+            return new Users(); // Fallback to empty list on error
         }
     }
 
     /**
-     * Saves the list of users to users.xml using JAXB.
+     * Saves the given user list to users.xml using JAXB.
      *
-     * @param users the Users object to be persisted
+     * @param users Users object to serialize to XML
      */
     private void saveUsers(Users users) {
         try {
             File xmlFile = new File(USER_FILE_PATH);
-            xmlFile.getParentFile().mkdirs(); // Ensure user-data directory exists
+            xmlFile.getParentFile().mkdirs(); // Ensure "user-data" folder exists
 
             JAXBContext context = JAXBContext.newInstance(Users.class);
             Marshaller marshaller = context.createMarshaller();
@@ -106,7 +106,7 @@ public class UserService {
 
             marshaller.marshal(users, xmlFile);
         } catch (Exception e) {
-            e.printStackTrace();
+            e.printStackTrace(); // Print stack trace for debugging
         }
     }
 }

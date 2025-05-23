@@ -10,12 +10,11 @@ import java.util.Map;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 /**
- * Controller for handling login, registration, and logout.
+ * Controller for handling user login, logout, and registration.
+ * Also restores in-progress bookings if login occurs mid-transaction.
  */
 @Controller
 public class LoginController {
@@ -24,10 +23,10 @@ public class LoginController {
     private final BookingRepository bookingRepository;
 
     /**
-     * Constructor-based dependency injection for UserService and BookingRepository.
+     * Constructor for injecting user and booking services.
      *
-     * @param userService        the user service to handle login/registration logic
-     * @param bookingRepository  the booking repository to persist pending bookings
+     * @param userService        Service to handle login and registration logic
+     * @param bookingRepository  Repository for saving pending bookings post-login
      */
     public LoginController(UserService userService, BookingRepository bookingRepository) {
         this.userService = userService;
@@ -35,42 +34,39 @@ public class LoginController {
     }
 
     /**
-     * Displays the login form and optionally shows messages if redirected
-     * after successful registration or logout.
+     * Displays the login form and optionally shows success messages for logout or registration.
      *
-     * @param logoutSuccess optional query parameter to trigger a logout message
-     * @param session       HTTP session to retrieve success messages
-     * @param model         model used to pass attributes to the view
-     * @return the login view
+     * @param logoutSuccess Optional flag to display logout confirmation
+     * @param session       Session used to retrieve registration success message
+     * @param model         Spring model for view data
+     * @return View name for login page
      */
     @GetMapping("/login")
     public String showLoginForm(@RequestParam(value = "logoutSuccess", required = false) String logoutSuccess,
                                 HttpSession session,
                                 Model model) {
-        // Check if there's a success message from registration
         Object registrationSuccess = session.getAttribute("registrationSuccess");
         if (registrationSuccess != null) {
             model.addAttribute("registrationSuccess", registrationSuccess);
-            session.removeAttribute("registrationSuccess");  // Clear it after one-time use
+            session.removeAttribute("registrationSuccess");
         }
+
         if ("true".equals(logoutSuccess)) {
             model.addAttribute("logoutSuccess", "You have been logged out successfully.");
         }
+
         return "login";
     }
 
     /**
-     * Handles login form submission, validates credentials, stores username
-     * in session, and checks for any in-progress flight booking.
+     * Handles login submission, validates credentials, stores user in session,
+     * and optionally restores any pre-login booking in progress.
      *
-     * If a booking intent is found in the session, the user is redirected to
-     * the confirmation view with booking details.
-     *
-     * @param username the entered username
-     * @param password the entered password
-     * @param model    the Spring model
-     * @param session  the HTTP session
-     * @return confirmation view if booking in progress, home otherwise
+     * @param username Entered username
+     * @param password Entered password
+     * @param model    Spring model
+     * @param session  User session for authentication and intent tracking
+     * @return Redirect to confirmation (if booking) or homepage
      */
     @PostMapping("/login")
     public String handleLogin(@RequestParam String username,
@@ -78,20 +74,13 @@ public class LoginController {
                               Model model,
                               HttpSession session) {
 
-        // Validate user credentials
-        boolean valid = userService.validateUser(username, password);
-
-        if (valid) {
-            // Store username in session on success
+        if (userService.validateUser(username, password)) {
             session.setAttribute("username", username);
 
-            // Check if user had a pending booking
             Object intent = session.getAttribute("bookingIntent");
-
             if (intent instanceof Map<?, ?> bookingData) {
                 session.removeAttribute("bookingIntent");
 
-                // Persist the booking to the database
                 Booking booking = new Booking();
                 booking.setUsername(username);
                 booking.setAirline((String) bookingData.get("airline"));
@@ -104,7 +93,8 @@ public class LoginController {
 
                 bookingRepository.save(booking);
 
-                // Add attributes to the model for confirmation page
+                // ✅ Fix: Ensure full booking object is passed to the view
+                model.addAttribute("booking", booking);
                 model.addAttribute("username", username);
                 model.addAttribute("airline", booking.getAirline());
                 model.addAttribute("origin", booking.getOrigin());
@@ -116,20 +106,17 @@ public class LoginController {
                 return "confirmation";
             }
 
-            // No booking in progress — go to main page
             return "redirect:/";
-
-        } else {
-            // Return to login with error message
-            model.addAttribute("error", "Invalid username or password.");
-            return "login";
         }
+
+        model.addAttribute("error", "Invalid username or password.");
+        return "login";
     }
 
     /**
-     * Displays the registration form.
+     * Displays the user registration form.
      *
-     * @return the register view
+     * @return View name for registration page
      */
     @GetMapping("/register")
     public String showRegisterForm() {
@@ -137,13 +124,13 @@ public class LoginController {
     }
 
     /**
-     * Handles registration form submission.
+     * Handles new user registration and redirects to login on success.
      *
-     * @param username the desired username
-     * @param password the desired password
-     * @param model    the Spring model
-     * @param session  the HTTP session for optional login
-     * @return redirect to search if success; redisplay form if duplicate
+     * @param username Desired username
+     * @param password Desired password
+     * @param model    Spring model for error messages
+     * @param session  Session used to store registration success
+     * @return Redirect or redisplay registration form
      */
     @PostMapping("/register")
     public String handleRegister(@RequestParam String username,
@@ -151,29 +138,24 @@ public class LoginController {
                                  Model model,
                                  HttpSession session) {
 
-        // Try to add user; check for duplicates
-        boolean added = userService.addUser(username, password);
-
-        if (!added) {
-            // Show error if username is taken
+        if (!userService.addUser(username, password)) {
             model.addAttribute("error", "Username already exists.");
             return "register";
         }
 
-        // Redirect to login after successful registration
         session.setAttribute("registrationSuccess", "Registration successful! You can now log in.");
         return "redirect:/login";
     }
 
     /**
-     * Logs out the current user and redirects to login.
+     * Logs out the current user and redirects to login with confirmation.
      *
-     * @param session the HTTP session to invalidate
-     * @return redirect to login page
+     * @param session The HTTP session to invalidate
+     * @return Redirect to login page with logout success flag
      */
     @GetMapping("/logout")
     public String handleLogout(HttpSession session) {
-        session.invalidate();  // Clear all session data
+        session.invalidate();
         return "redirect:/login?logoutSuccess=true";
     }
 }

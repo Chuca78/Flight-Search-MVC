@@ -9,29 +9,32 @@ import org.springframework.web.client.RestTemplate;
 import com.example.flightsearchmvc.config.AmadeusProperties;
 
 /**
- * Main application class for launching the Flight Search MVC project.
+ * Entry point for the Flight Search MVC Spring Boot application.
  * 
- * This initializes the Spring Boot application context and starts the web server.
+ * This class initializes the Spring Boot application context,
+ * registers beans, and starts the embedded server.
  */
 @SpringBootApplication
-@EnableConfigurationProperties(AmadeusProperties.class) 
+@EnableConfigurationProperties(AmadeusProperties.class)
 public class FlightSearchMvcApplication {
 
     /**
-     * Entry point for the Spring Boot application.
-     * 
-     * @param args Command-line arguments
+     * Main method to launch the Spring Boot application.
+     *
+     * @param args command-line arguments (not used)
      */
     public static void main(String[] args) {
         SpringApplication.run(FlightSearchMvcApplication.class, args);
     }
 
     /**
-     * Registers a RestTemplate bean for external HTTP calls.
+     * Creates a RestTemplate bean used for performing HTTP calls
+     * (e.g., to the Amadeus flight offers API).
+     *
+     * @return a configured RestTemplate instance
      */
     @Bean
     public RestTemplate restTemplate() {
         return new RestTemplate();
     }
-
 }

@@ -3,6 +3,8 @@ package com.example.flightsearchmvc;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 /**
  * Basic integration test to verify that the Spring Boot application context loads successfully.
  * This ensures all configuration and bean initialization is valid.
@@ -11,12 +13,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 class FlightSearchMvcApplicationTests {
 
     /**
-     * Verifies that the Spring application context can load without errors.
-     * This test is useful as a baseline health check of the overall configuration.
+     * Verifies that the Spring application context can load without throwing exceptions.
+     * Acts as a smoke test for application stability.
      */
     @Test
     void contextLoads() {
-        System.out.println("contextLoads test executed successfully.");
-        assert true;  // Simple assertion to confirm test ran
+        assertTrue(true, "Spring context should load without errors");
     }
 }

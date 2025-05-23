@@ -6,8 +6,8 @@ import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
 
 /**
- * Represents a single user entry in users.xml.
- * Used for XML-based user registration and authentication.
+ * Represents a user account for authentication purposes.
+ * This class is used by JAXB to serialize and deserialize user entries in users.xml.
  */
 @XmlRootElement(name = "user")
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -20,14 +20,14 @@ public class User {
     private String password;
 
     /**
-     * Default constructor for JAXB.
+     * Default constructor required for JAXB marshalling/unmarshalling.
      */
     public User() {
     }
 
     /**
-     * Gets the username of the user.
-     * @return username
+     * Returns the username of the user.
+     * @return the username string
      */
     public String getUsername() {
         return username;
@@ -35,15 +35,15 @@ public class User {
 
     /**
      * Sets the username of the user.
-     * @param username the username
+     * @param username the desired username string
      */
     public void setUsername(String username) {
         this.username = username;
     }
 
     /**
-     * Gets the password of the user.
-     * @return password
+     * Returns the password of the user.
+     * @return the password string
      */
     public String getPassword() {
         return password;
@@ -51,7 +51,7 @@ public class User {
 
     /**
      * Sets the password of the user.
-     * @param password the password
+     * @param password the desired password string
      */
     public void setPassword(String password) {
         this.password = password;

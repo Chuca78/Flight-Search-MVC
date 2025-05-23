@@ -11,14 +11,14 @@ import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Unit tests for {@link FlightSearchRequest}.
- * Verifies that input constraints (e.g., @NotNull, @Min) are enforced.
+ * Validates form constraints such as @NotNull and @Min for user-submitted search data.
  */
 class FlightSearchRequestTest {
 
     private static Validator validator;
 
     /**
-     * Initializes a shared Validator instance used for validating test inputs.
+     * Initializes the Validator instance once for all test methods.
      */
     @BeforeAll
     static void setupValidator() {
@@ -27,43 +27,43 @@ class FlightSearchRequestTest {
     }
 
     /**
-     * Ensures a fully populated and valid FlightSearchRequest passes validation.
+     * Tests that a properly filled form request passes all validation constraints.
      */
     @Test
     void validRequest_shouldPassValidation() {
         FlightSearchRequest request = new FlightSearchRequest();
-        request.setOrigin("New York");
-        request.setDestination("London");
+        request.setOrigin("JFK");
+        request.setDestination("LAX");
         request.setDate(LocalDate.now());
         request.setPassengers(1);
 
         Set<ConstraintViolation<FlightSearchRequest>> violations = validator.validate(request);
-        assertTrue(violations.isEmpty(), "Valid request should not trigger validation errors");
+        assertTrue(violations.isEmpty(), "Valid request should not produce validation errors");
     }
 
     /**
-     * Ensures that a request missing required fields fails validation.
+     * Tests that a request missing all required fields fails validation.
      */
     @Test
     void missingRequiredFields_shouldFailValidation() {
-        FlightSearchRequest request = new FlightSearchRequest(); // No fields populated
+        FlightSearchRequest request = new FlightSearchRequest(); // Empty object
 
         Set<ConstraintViolation<FlightSearchRequest>> violations = validator.validate(request);
-        assertFalse(violations.isEmpty(), "Missing fields should result in validation errors");
+        assertFalse(violations.isEmpty(), "Missing required fields should trigger validation errors");
     }
 
     /**
-     * Ensures that setting passengers to a negative value fails validation.
+     * Tests that a negative number of passengers fails the @Min constraint.
      */
     @Test
     void negativePassengers_shouldFailValidation() {
         FlightSearchRequest request = new FlightSearchRequest();
-        request.setOrigin("New York");
-        request.setDestination("London");
+        request.setOrigin("SEA");
+        request.setDestination("ORD");
         request.setDate(LocalDate.now());
-        request.setPassengers(-1); // Invalid input
+        request.setPassengers(-1); // Invalid passengers
 
         Set<ConstraintViolation<FlightSearchRequest>> violations = validator.validate(request);
-        assertFalse(violations.isEmpty(), "Negative passengers should fail validation");
+        assertFalse(violations.isEmpty(), "Negative passengers should not pass validation");
     }
 }

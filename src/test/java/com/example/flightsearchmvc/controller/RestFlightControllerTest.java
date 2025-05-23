@@ -20,8 +20,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 /**
  * Integration tests for {@link RestFlightController}.
- * These tests verify the behavior of the /api/search endpoint,
- * which provides JSON-formatted flight search results.
+ * Verifies REST API behavior at /api/search endpoint using form parameters.
  */
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -35,30 +34,29 @@ class RestFlightControllerTest {
     private FlightSearchService flightSearchService;
 
     /**
-     * Constructs the test with WebApplicationContext injected.
+     * Constructor injection of the application context.
      *
-     * @param context the Spring application context
+     * @param context Spring WebApplicationContext
      */
     public RestFlightControllerTest(WebApplicationContext context) {
         this.context = context;
     }
 
     /**
-     * Initializes MockMvc and stubs the flight search service to return a mocked flight result.
+     * Sets up the test environment and mocks Amadeus API results.
      */
     @BeforeEach
     void setup() {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.context).build();
 
-        // Return a dummy flight result when the Amadeus search is triggered
-        when(flightSearchService.searchWithAmadeus(any())).thenReturn(
-                List.of(new FlightResult("UA", "CID", "CLT", "08:00", "11:00", 350.00))
-        );
+        // Return a dummy flight result for all Amadeus searches
+        when(flightSearchService.searchWithAmadeus(any()))
+                .thenReturn(List.of(new FlightResult("UA", "CID", "CLT", "08:00", "11:00", 350.00)));
     }
 
     /**
-     * Simulates a POST request to /api/search using form parameters.
-     * Asserts that the response is HTTP 200 OK and the content type is application/json.
+     * Validates that /api/search responds with 200 OK and returns JSON content
+     * when valid parameters are posted.
      */
     @Test
     void searchFlights_returnsOk_withFormParams() throws Exception {
@@ -68,7 +66,7 @@ class RestFlightControllerTest {
                         .param("date", "2025-05-05")
                         .param("passengers", "1")
                         .param("source", "amadeus"))
-                .andExpect(status().isOk()) // Expect 200 OK
-                .andExpect(content().contentTypeCompatibleWith("application/json")); // Expect JSON content
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith("application/json"));
     }
 }

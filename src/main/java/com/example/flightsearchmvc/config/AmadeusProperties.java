@@ -4,53 +4,78 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
 /**
- * Configuration class that maps properties defined in application.yml or application.properties
- * using the prefix "amadeus". These properties are used to configure access to the Amadeus API.
+ * Configuration class that maps properties defined in application.properties using the "amadeus" prefix.
+ * These values are used to configure access to the Amadeus API.
  */
-@Component 
+@Component
 @ConfigurationProperties(prefix = "amadeus")
 public class AmadeusProperties {
 
-    // Client ID used for Amadeus API authentication
     private String clientId;
-
-    // Client secret used for Amadeus API authentication
     private String clientSecret;
-
-    // URL to retrieve OAuth access tokens
     private String tokenUrl;
-
-    // Base URL to access Amadeus flight offer APIs
     private String apiUrl;
 
-    // Getter and setter for clientId
+    /**
+     * Gets the Amadeus API client ID.
+     * @return client ID
+     */
     public String getClientId() {
         return clientId;
     }
+
+    /**
+     * Sets the Amadeus API client ID.
+     * @param clientId the client ID
+     */
     public void setClientId(String clientId) {
         this.clientId = clientId;
     }
 
-    // Getter and setter for clientSecret
+    /**
+     * Gets the Amadeus API client secret.
+     * @return client secret
+     */
     public String getClientSecret() {
         return clientSecret;
     }
+
+    /**
+     * Sets the Amadeus API client secret.
+     * @param clientSecret the client secret
+     */
     public void setClientSecret(String clientSecret) {
         this.clientSecret = clientSecret;
     }
 
-    // Getter and setter for tokenUrl
+    /**
+     * Gets the token URL used to retrieve access tokens from Amadeus.
+     * @return token URL
+     */
     public String getTokenUrl() {
         return tokenUrl;
     }
+
+    /**
+     * Sets the token URL for Amadeus OAuth authentication.
+     * @param tokenUrl the token endpoint
+     */
     public void setTokenUrl(String tokenUrl) {
         this.tokenUrl = tokenUrl;
     }
 
-    // Getter and setter for apiUrl
+    /**
+     * Gets the base API URL for searching flight offers.
+     * @return base API URL
+     */
     public String getApiUrl() {
         return apiUrl;
     }
+
+    /**
+     * Sets the base API URL for Amadeus flight offers.
+     * @param apiUrl the API URL
+     */
     public void setApiUrl(String apiUrl) {
         this.apiUrl = apiUrl;
     }

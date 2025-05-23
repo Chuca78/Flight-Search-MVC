@@ -6,16 +6,16 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 /**
- * Repository interface for accessing booking data.
- * Inherits CRUD methods from JpaRepository and adds custom queries.
+ * Spring Data JPA repository for accessing {@link Booking} entities.
+ * Provides basic CRUD operations and custom query methods.
  */
 public interface BookingRepository extends JpaRepository<Booking, Long> {
 
     /**
-     * Retrieves all bookings made by a specific user.
+     * Finds all bookings associated with the specified username.
      *
-     * @param username the username associated with the booking
-     * @return list of matching Booking records
+     * @param username the username to search for
+     * @return a list of {@link Booking} objects belonging to the user
      */
     List<Booking> findByUsername(String username);
 }

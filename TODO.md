@@ -55,7 +55,7 @@ Completed:
 - [x] Added ticket price multiplier by the number of passengers
 - [x] Cleaned up project files, remove unused assets
 - [x] Reviewed and polish all UI and templates for visual consistency and usability
-- [ ] Verify javadoc and inline commenting complete
+- [x] Verify javadoc and inline commenting complete
 - [x] Added JavaScript validation for:
   - [x] Disallowing past travel dates on the client side
   - [x] Preventing empty form submissions (redundant with backend, but improves UX)
@@ -81,6 +81,6 @@ Completed:
 - [ ] Consider making the whole result card clickable instead of just the book now button
 - [ ] Consider card spacing (Too much white space?)
 - [ ] Consider updating logic to include search by city as well as airport code
-  - [ ] Did not implement city name support, but clarified placeholder/help text ("Enter a valid 3-letter airport code")
+    - Did not implement city name support, but clarified placeholder/help text ("Enter a valid 3-letter airport code")
 
 ---

@@ -1,11 +1,21 @@
-
 package com.example.flightsearchmvc.util;
 
 import java.util.Map;
 
+/**
+ * Utility class for resolving airline codes to their full names.
+ * 
+ * This is primarily used to improve the readability of search results by converting
+ * IATA airline codes (e.g., "AA") into user-friendly names (e.g., "American Airlines").
+ */
 public class AirlineUtils {
 
-    // Comprehensive mapping of US operating air carriers (should be expanded for global operations via additional API call)
+    /**
+     * Map of IATA airline codes to full airline names.
+     * 
+     * Includes major U.S. and international carriers that operate into or out of the United States.
+     * Can be expanded with more codes or replaced with a dynamic lookup service in the future.
+     */
     private static final Map<String, String> airlineMap = Map.ofEntries(
         Map.entry("AA", "American Airlines"),
         Map.entry("DL", "Delta Air Lines"),
@@ -57,6 +67,12 @@ public class AirlineUtils {
         Map.entry("TP", "TAP Air Portugal")
     );
 
+    /**
+     * Returns the full name of an airline given its IATA code.
+     * 
+     * @param code the 2-letter IATA airline code
+     * @return the full airline name if known; otherwise returns the code itself
+     */
     public static String getAirlineName(String code) {
         return airlineMap.getOrDefault(code, code);
     }

@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 /**
- * Web controller that handles requests for flight search using a traditional HTML-based interface.
- * Provides endpoints for rendering the search form and processing user submissions.
+ * Web controller for handling flight search via a traditional MVC interface.
+ * Renders the search form and processes flight search requests using Amadeus API.
  */
 @Controller
 public class FlightController {
@@ -23,32 +23,32 @@ public class FlightController {
     /**
      * Constructor for injecting the flight search service.
      *
-     * @param flightSearchService Service for retrieving flight information
+     * @param flightSearchService Service responsible for retrieving flights
      */
     public FlightController(FlightSearchService flightSearchService) {
         this.flightSearchService = flightSearchService;
     }
 
     /**
-     * Handles GET requests to the root path ("/") and displays the search form.
+     * Displays the main flight search form at the root URL ("/").
      *
-     * @param model Spring model to bind the form object
-     * @return View name for the index page
+     * @param model Spring model used to bind form input
+     * @return View name for the search page
      */
     @GetMapping("/")
     public String showSearchForm(Model model) {
-        // Initialize a new form object to bind user input
         model.addAttribute("flightSearchRequest", new FlightSearchRequest());
         return "search";
     }
 
     /**
-     * Handles POST requests to perform a flight search.
+     * Processes the submitted flight search form.
+     * Validates user input, performs an API search, and displays results or errors.
      *
-     * @param request        The flight search form data
-     * @param bindingResult  Holds validation errors, if any
-     * @param model          Spring model to pass attributes to the view
-     * @return View name to render results or return to form on error
+     * @param request       User's search parameters
+     * @param bindingResult Validation result for the request
+     * @param model         Spring model to pass search results or errors
+     * @return View name for the results page or back to form with error
      */
     @PostMapping("/search")
     public String processSearch(
@@ -56,17 +56,16 @@ public class FlightController {
             BindingResult bindingResult,
             Model model
     ) {
-        // Return to form if validation errors exist
         if (bindingResult.hasErrors()) {
             model.addAttribute("error", "Invalid search input. Please check all fields.");
             return "search";
         }
 
-       try {
+        try {
             List<FlightResult> results = flightSearchService.searchWithAmadeus(request);
             model.addAttribute("flightResults", results);
         } catch (IllegalArgumentException iae) {
-            model.addAttribute("error", iae.getMessage()); // Show user-friendly input error
+            model.addAttribute("error", iae.getMessage()); // Specific user input issue
         } catch (Exception e) {
             String errorMessage = e.getMessage();
             if (errorMessage != null && errorMessage.contains("INVALID DATE")) {
@@ -75,6 +74,7 @@ public class FlightController {
                 model.addAttribute("error", "Unable to fetch flight data. Please check your input or try again later.");
             }
         }
-            return "search";
+
+        return "search";
     }
 }

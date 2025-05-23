@@ -1,0 +1,22 @@
+{"properties": [
+  {
+    "name": "amadeus.api-url",
+    "type": "java.lang.String",
+    "description": "A description for 'amadeus.api-url'"
+  },
+  {
+    "name": "amadeus.token-url",
+    "type": "java.lang.String",
+    "description": "A description for 'amadeus.token-url'"
+  },
+  {
+    "name": "amadeus.client-id",
+    "type": "java.lang.String",
+    "description": "A description for 'amadeus.client-id'"
+  },
+  {
+    "name": "amadeus.client-secret",
+    "type": "java.lang.String",
+    "description": "A description for 'amadeus.client-secret'"
+  }
+]}

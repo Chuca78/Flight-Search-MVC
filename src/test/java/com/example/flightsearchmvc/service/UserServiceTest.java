@@ -7,15 +7,16 @@ import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Unit tests for {@link UserService}.
- * Verifies behavior for adding, validating, and checking users in the users.xml file.
+ * Verifies the behavior for adding users, checking existence,
+ * and validating credentials against users.xml.
  */
 public class UserServiceTest {
 
     private UserService userService;
 
     /**
-     * Initializes a new instance of UserService before each test.
-     * Uses the default XML file path defined in the implementation.
+     * Sets up a fresh instance of UserService before each test.
+     * Note: Uses actual file I/O via the default XML file path.
      */
     @BeforeEach
     void setup() {
@@ -23,24 +24,22 @@ public class UserServiceTest {
     }
 
     /**
-     * Tests that a new user can be added and then verified to exist.
-     * Uses a unique timestamped username to avoid collision in repeated test runs.
+     * Adds a uniquely named user and verifies that they were successfully saved and exist.
      */
     @Test
     void testAddUserAndCheckExists() {
-        String username = "junit_user_" + System.currentTimeMillis(); // Ensure uniqueness
+        String username = "junit_user_" + System.currentTimeMillis(); // Prevent name collisions
         String password = "testpass";
 
         boolean added = userService.addUser(username, password);
-        assertTrue(added, "User should be added successfully");
+        assertTrue(added, "Expected user to be added successfully");
 
         boolean exists = userService.userExists(username);
-        assertTrue(exists, "User should now exist");
+        assertTrue(exists, "Expected user to exist after addition");
     }
 
     /**
-     * Tests that a valid username and password combination returns true.
-     * Adds the user first, then verifies login success.
+     * Adds a user, then verifies that valid credentials are accepted.
      */
     @Test
     void testValidateUserSuccess() {
@@ -49,15 +48,15 @@ public class UserServiceTest {
         userService.addUser(username, password);
 
         boolean isValid = userService.validateUser(username, password);
-        assertTrue(isValid, "Valid user credentials should be accepted");
+        assertTrue(isValid, "Expected valid credentials to return true");
     }
 
     /**
-     * Tests that invalid credentials (user not in XML) return false.
+     * Verifies that nonexistent users return false when validated.
      */
     @Test
     void testValidateUserFailure() {
         boolean isValid = userService.validateUser("wronguser", "wrongpass");
-        assertFalse(isValid, "Invalid credentials should not be accepted");
+        assertFalse(isValid, "Expected validation to fail for unknown user");
     }
 }

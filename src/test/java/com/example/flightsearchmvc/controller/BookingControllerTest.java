@@ -64,9 +64,14 @@ public class BookingControllerTest {
         );
 
         verify(bookingRepository, times(1)).save(any()); // Verify save was triggered
+        verify(model).addAttribute(eq("username"), eq("testuser"));
         assertEquals("confirmation", result);            // Confirmation view should be returned
     }
 
+    /**
+     * Tests that when an unauthenticated user tries to book,
+     * the intent is stored in session and they are redirected to login.
+     */
     @Test
     void unauthenticatedBooking_setsIntentAndRedirects() {
         when(session.getAttribute("username")).thenReturn(null);
@@ -84,7 +89,8 @@ public class BookingControllerTest {
                 "LAX".equals(map.get("destination")) &&
                 "08:00".equals(map.get("departureTime")) &&
                 "11:00".equals(map.get("arrivalTime")) &&
-                Double.valueOf(299.99).equals(map.get("price"));
+                Double.valueOf(299.99).equals(map.get("price")) &&
+                Integer.valueOf(2).equals(map.get("passengers"));
         }));
 
         assertEquals("redirect:/login", result);

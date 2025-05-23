@@ -5,8 +5,8 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 
 /**
- * Represents the user input for searching flights.
- * This model is bound to the flight search form.
+ * Represents the user input for a flight search request.
+ * This model is bound to the flight search form via Thymeleaf and used in both MVC and REST layers.
  */
 public class FlightSearchRequest {
 
@@ -23,45 +23,45 @@ public class FlightSearchRequest {
     private int passengers;
 
     /**
-     * Default constructor used by frameworks.
+     * Default constructor for framework use.
      */
     public FlightSearchRequest() {
     }
 
     /**
-     * Gets the origin airport or city.
-     * @return origin code
+     * Returns the origin airport IATA code.
+     * @return origin code (e.g., "JFK")
      */
     public String getOrigin() {
         return origin;
     }
 
     /**
-     * Sets the origin airport or city.
-     * @param origin origin code
+     * Sets the origin airport code. Converts input to uppercase for consistency.
+     * @param origin airport code string
      */
     public void setOrigin(String origin) {
         this.origin = origin != null ? origin.toUpperCase() : null;
     }
 
     /**
-     * Gets the destination airport or city.
-     * @return destination code
+     * Returns the destination airport IATA code.
+     * @return destination code (e.g., "LAX")
      */
     public String getDestination() {
         return destination;
     }
 
     /**
-     * Sets the destination airport or city.
-     * @param destination destination code
+     * Sets the destination airport code. Converts input to uppercase for consistency.
+     * @param destination airport code string
      */
     public void setDestination(String destination) {
         this.destination = destination != null ? destination.toUpperCase() : null;
     }
 
     /**
-     * Gets the selected travel date.
+     * Returns the selected departure date.
      * @return travel date
      */
     public LocalDate getDate() {
@@ -69,16 +69,16 @@ public class FlightSearchRequest {
     }
 
     /**
-     * Sets the selected travel date.
-     * @param date travel date
+     * Sets the departure date.
+     * @param date LocalDate object
      */
     public void setDate(LocalDate date) {
         this.date = date;
     }
 
     /**
-     * Gets the number of passengers.
-     * @return number of passengers
+     * Returns the number of passengers in the search request.
+     * @return number of travelers
      */
     public int getPassengers() {
         return passengers;
@@ -86,7 +86,7 @@ public class FlightSearchRequest {
 
     /**
      * Sets the number of passengers.
-     * @param passengers passenger count
+     * @param passengers integer value (minimum 1)
      */
     public void setPassengers(int passengers) {
         this.passengers = passengers;

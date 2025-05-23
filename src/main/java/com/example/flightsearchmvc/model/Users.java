@@ -9,28 +9,28 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Wrapper class for a list of users, used for JAXB XML binding.
- * This corresponds to the root element <users> in users.xml.
+ * Represents a collection of registered users for authentication purposes.
+ * This class is the root element <users> used for JAXB binding with users.xml.
  */
 @XmlRootElement(name = "users")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Users {
 
-    /** List of user entries parsed from or written to users.xml */
+    /** The list of user entries stored in the XML file. */
     @XmlElement(name = "user")
     private List<User> userList = new ArrayList<>();
 
     /**
-     * Returns the list of users.
-     * @return a list of User objects
+     * Gets the list of users loaded from or to be written to XML.
+     * @return a list of {@link User} objects
      */
     public List<User> getUserList() {
         return userList;
     }
 
     /**
-     * Sets the list of users.
-     * @param userList the list of User objects to set
+     * Sets the list of users to be stored in XML.
+     * @param userList the list of {@link User} objects
      */
     public void setUserList(List<User> userList) {
         this.userList = userList;

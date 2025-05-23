@@ -12,8 +12,8 @@ import java.util.Map;
 
 /**
  * Controller responsible for handling flight bookings.
- * Validates session, saves booking data to the H2 database,
- * and redirects to a confirmation view.
+ * Validates user sessions, saves booking data to the H2 database,
+ * and displays confirmation or booking history views.
  */
 @Controller
 public class BookingController {
@@ -30,18 +30,20 @@ public class BookingController {
     }
 
     /**
-     * Handles the booking request submitted by a logged-in user.
+     * Handles POST requests for booking a flight. Validates login,
+     * persists booking details to the database, and displays a confirmation view.
+     * If the user is not logged in, redirects to login and stores the booking intent in the session.
      *
      * @param airline        The selected airline name
-     * @param origin         Flight origin code
-     * @param destination    Flight destination code
-     * @param departureTime  Flight departure time
-     * @param arrivalTime    Flight arrival time
-     * @param price          Flight price
+     * @param origin         Flight origin code (IATA)
+     * @param destination    Flight destination code (IATA)
+     * @param departureTime  ISO 8601 string representing flight departure time
+     * @param arrivalTime    ISO 8601 string representing flight arrival time
+     * @param price          Base ticket price (single passenger)
      * @param passengers     Number of passengers
-     * @param session        HTTP session to validate logged-in user
-     * @param model          Spring Model to pass data to the view
-     * @return               Confirmation page or redirect to login
+     * @param session        HTTP session used to check login status and store intent
+     * @param model          Spring model used to pass attributes to confirmation view
+     * @return Redirect to login or confirmation page
      */
     @PostMapping("/book")
     public String handleBooking(
@@ -55,11 +57,9 @@ public class BookingController {
             HttpSession session,
             Model model) {
 
-        // Check if user is logged in
         String username = (String) session.getAttribute("username");
 
         if (username == null) {
-            // Save booking details to session
             session.setAttribute("bookingIntent", Map.of(
                 "airline", airline,
                 "origin", origin,
@@ -72,7 +72,6 @@ public class BookingController {
             return "redirect:/login";
         }
 
-        // Build Booking entity from form data
         Booking booking = new Booking();
         booking.setUsername(username);
         booking.setAirline(airline);
@@ -84,11 +83,9 @@ public class BookingController {
         booking.setPassengers(passengers);
         booking.setDate(LocalDate.now());
 
-        // Persist the booking to the H2 database
         bookingRepository.save(booking);
 
-        // Add attributes to the model for the confirmation view
-        model.addAttribute("booking", booking);  
+        model.addAttribute("booking", booking);
         model.addAttribute("username", username);
         model.addAttribute("origin", origin);
         model.addAttribute("destination", destination);
@@ -98,17 +95,16 @@ public class BookingController {
         model.addAttribute("price", price);
         model.addAttribute("passengers", passengers);
 
-        // Return the confirmation page
         return "confirmation";
     }
 
     /**
-     * Displays a list of all bookings for the currently logged-in user.
-     * If no user is logged in, redirects to the login page.
+     * Displays all bookings made by the logged-in user.
+     * Redirects to login page if no user is authenticated.
      *
-     * @param session the current HTTP session containing the logged-in user
-     * @param model   the model used to pass booking data to the view
-     * @return the "my-bookings" view if user is authenticated, otherwise redirect to login
+     * @param session HTTP session containing the current user
+     * @param model   Spring model to populate the booking history view
+     * @return Thymeleaf view name for "my-bookings"
      */
     @GetMapping("/my-bookings")
     public String showBookings(HttpSession session, Model model) {
