@@ -85,7 +85,17 @@ public class FlightSearchService {
             try {
                 ObjectMapper mapper = new ObjectMapper();
                 JsonNode root = mapper.readTree(response.getBody());
+
+                // Check for error node
+                if (root.has("errors")) {
+                    String message = root.path("errors").get(0).path("detail").asText("Invalid request to Amadeus API.");
+                    throw new IllegalArgumentException(message);
+                }
+
                 JsonNode data = root.path("data");
+                if (!data.isArray() || data.isEmpty()) {
+                    throw new IllegalArgumentException("No flights were found between the selected cities on that date.");
+                }
 
                 for (JsonNode offer : data) {
                     JsonNode itinerary = offer.path("itineraries").get(0);
@@ -106,6 +116,8 @@ public class FlightSearchService {
                             price
                     ));
                 }
+            } catch (IllegalArgumentException e) {
+                throw e; // Re-throw so controller can handle it
             } catch (Exception e) {
                 throw new RuntimeException("Failed to parse Amadeus response.");
             }
