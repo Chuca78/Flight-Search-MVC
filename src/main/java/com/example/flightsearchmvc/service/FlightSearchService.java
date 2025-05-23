@@ -56,7 +56,7 @@ public class FlightSearchService {
                 + "?originLocationCode={origin}"
                 + "&destinationLocationCode={destination}"
                 + "&departureDate={date}"
-                + "&adults=1&max=5";
+                + "&adults=1&max=10";
 
         // Set authorization and content type headers
         HttpHeaders headers = new HttpHeaders();

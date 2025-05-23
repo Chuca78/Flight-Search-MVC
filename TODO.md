@@ -55,6 +55,7 @@ Completed:
 - [x] Added ticket price multiplier by the number of passengers
 - [x] Cleaned up project files, remove unused assets
 - [x] Reviewed and polish all UI and templates for visual consistency and usability
+- [ ] Verify javadoc and inline commenting complete
 - [x] Added JavaScript validation for:
   - [x] Disallowing past travel dates on the client side
   - [x] Preventing empty form submissions (redundant with backend, but improves UX)
@@ -67,11 +68,13 @@ Completed:
 ## USER TESTING FEEDBACK (Consider implementing fixes):
 ### Implemented
 - [x] Update error messages to be more meaningful (Unable to fetch flight data. Please check your input or try again later.)
-        This message is present when user inputs city name instead of airport code, user doesn't know why there is an error
+      - This message is present when user inputs city name instead of airport code, user doesn't know why there is an error
 - [x] Allow user to print or download booking information
-- [ ] Verify javadoc and inline commenting complete
-- [ ] Give user a better loading indicator after search submitted
-- [ ] Review logic for results (why five? what is the order? is there a better way to output?)
+- [x] Give user a better loading indicator after search submitted
+- [x] Review logic for results (why five? what is the order? is there a better way to output?)
+      - Changed results to ten for variety and even results
+      - ordered by cheapest first by default
+      - considered implementing sorting options, but decided not to implement for this project
 
 ### Not Implemented
 - [ ] Consider changing location of calendar and passenger counter (One user didn't see the controls)
