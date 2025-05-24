@@ -71,10 +71,11 @@ Completed:
       - This message is present when user inputs city name instead of airport code, user doesn't know why there is an error
 - [x] Allow user to print or download booking information
 - [x] Give user a better loading indicator after search submitted
+- [x] Implement enhanced error handling for illegal flight search criteria
 - [x] Review logic for results (why five? what is the order? is there a better way to output?)
       - Changed results to ten for variety and even results
-      - ordered by cheapest first by default
-      - considered implementing sorting options, but decided not to implement for this project
+      - Ordered by cheapest first by default
+      - Considered implementing sorting options, but decided not to implement for this project
 
 ### Not Implemented
 - [ ] Consider changing location of calendar and passenger counter (One user didn't see the controls)
